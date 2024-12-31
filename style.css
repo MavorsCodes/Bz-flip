@@ -1,0 +1,121 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background-color: #434452;
+  color: white;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;  /* Add some space between the input and the button */
+}
+#outputs{
+  margin-top: 5vw;
+  display: flex; /* Enable Flexbox */
+  align-items: center; /* Align items vertically (optional) */
+  justify-content: center;
+  width: 95vw; /* Ensures the container spans the screen */
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.66vw;
+}
+
+#min_buy_box {
+  max-width: 2vw;
+  padding: none;
+  font-size: 70%;
+}
+
+.output {
+  border-radius: 3%;
+  overflow: hidden;
+  background-color: #575b75;
+  width: 320px;
+  aspect-ratio: 1/0.9;
+  text-align: center; /* Center text inside each item (optional) */
+}
+.output img{
+  margin-top: 5%;
+  max-width: 16%;
+  aspect-ratio: 1/1;
+}
+.output p {
+  color : #FFFFFF;
+  font-size: 110%;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: 16px Arial;
+}
+
+.autocomplete {
+  /* The container must be positioned relative */
+  position: relative;
+  display: inline-flex;  /* Change to inline-flex to align the input and button horizontally */
+  align-items: center;   /* Center-align items vertically */
+}
+
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+  width: 200px; /* Set a fixed width for the input field */
+}
+
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /* Position the autocomplete items to be the same width as the container */
+  top: 100%;
+  left: 0;
+  right: 0;
+  overflow: scroll;
+  max-height: 50vh;
+  width: 82%;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #575b75;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items div:hover {
+  background-color: #434452;
+}
+
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+.autocomplete-item {
+  width: 100%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

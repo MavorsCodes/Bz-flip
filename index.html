@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BZ PRICE SEARCHER</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Search for the current price of an item on bz</h1>
+  <label for="min_buy">Minimum one-hour instabuys</label>
+  <input id="min_buy" name="min_buy" type="range" min="0" max="100" value="0" >
+  <input id="min_buy_box" name="min_buy_box" value="0" type="number">
+  <select id="address">
+    <option value="BAZAAR">bazaar</option>
+    <!--<option value="AUCTIONS">auction house</option> -->
+  </select>
+  <div class="autocomplete" style="width:300px;">
+    <input id="search" autocomplete="off" type="text" name="search" placeholder="Type to search...">
+    <button id="getData">search</button>
+  </div>
+  <div id="outputs"></div>
+  <script src="client.js"></script>
+
+</body>
+</html>
