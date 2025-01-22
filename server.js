@@ -2,9 +2,12 @@ const fs = require("fs");
 const http = require('http');
 const path = require('path');
 const url = require('url');
+const mysql = require('mysql');
+const db = require ('./db.js');
 
 const port = 3000;
-const API_KEY = "skibidi rizz ohio";
+const API_KEY = "LUKO E' UNA PUTTANA";
+
 
 const API_ADDRESSES = {
     AUCTIONS: "https://api.hypixel.net/v2/skyblock/auctions",
@@ -34,6 +37,7 @@ const IMG_PATHS = {
 
   "KISMET_FEATHER": "ASSETS/PRODUCTS/feather.png",
 }
+
 class Product{
   constructor(name,buy_price,one_hour_instabuys,sell_price,one_hour_instasells){
     this.name = name;
@@ -55,34 +59,34 @@ class Product{
   }
   loadImage(imgPath) {
     try {
-      const data = fs.readFileSync(imgPath); // Read the image file
+      const data = fs.readFileSync(imgPath);
       return `data:image/jpeg;base64,${data.toString('base64')}`;
     } catch (err) {
       console.error('Error loading image:', err);
-      return null; // Handle errors gracefully
+      return null; 
     }
   }
   getPlaceholderImage() {
     try {
-      const placeholderPath = "ASSETS/PRODUCTS/WIP.png"; // Default image path
+      const placeholderPath = "ASSETS/PRODUCTS/WIP.png";
       const data = fs.readFileSync(placeholderPath);
       return `data:image/jpeg;base64,${data.toString('base64')}`;
     } catch (err) {
       console.error('Error loading placeholder image:', err);
-      return null; // Return null if placeholder image also fails
+      return null;
     }
   }
 }
-
-
 
 var bzData;
 var ahData;
 var allBzProductData;
 var Mayor;
 var updating = true;
-var fetchAllProducts = false;
+var fetchAllProducts = true;
+var populatedb = true;
 var callDelay = 3 * 1000;
+
 
 
 const server = http.createServer((req, res) => {
@@ -139,14 +143,18 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(port, () => {
+server.listen(port,() => {
   console.log(`Server running at http://localhost:${port}/`);
   getMayor();
+  db.connectToDb();
+  
   bzData = fileToJson(FILE_PATHS["BAZAAR"]);
   ahData = fileToJson(FILE_PATHS["AUCTIONS"]);
   allBzDataToProduct();
   if(updating) startPeriodicTasks();
   if(fetchAllProducts) getAllBzProducts();
+  if(populatedb) populateBzDb();
+  writeallBzToDb();
 });
 
 function startPeriodicTasks() {
@@ -171,7 +179,7 @@ function startPeriodicTasks() {
       try {
         allBzDataToProduct();
       } catch (error) {
-        console.error("Error in fetching bz data", error);
+        console.error("Error in writing bz data", error);
       }
     }, callDelay);
 
@@ -179,9 +187,17 @@ function startPeriodicTasks() {
       try {
         await getMayor();
       } catch (error) {
-        console.error("Error in fetching bz data", error);
+        console.error("Error in fetching mayor data", error);
       }
     }, 24 * 60 * 60 * 1000);
+
+    setInterval(async () => {
+      try {
+        writeallBzToDb();
+      } catch (error) {
+        console.error("Error in writing bz data to db", error);
+      }
+    },3600 * 1000);
 }
 async function getMayor() {
   Mayor = await fetchApi("MAYOR");
@@ -269,7 +285,21 @@ function fileToJson(filepath) {
 function getAllBzProducts(){
     let allProducts = [];
     for (product in bzData.products){
-        allProducts.push(bzData.products[product].product_id.replace(/_/g, " "));
+        allProducts.push(bzData.products[product].product_id);
     }
     jsonToFile(FILE_PATHS["ALL_PRODUCTS"],JSON.stringify(allProducts));
+}
+
+async function populateBzDb(){
+  for(product in allBzProductData){
+    if(!await db.productExists( allBzProductData[product].name)){
+      db.addProduct(allBzProductData[product].name,allBzProductData[product].name);
+    }
+  }
+}
+
+function writeallBzToDb(){
+ for(let i = 0; i < allBzProductData.length; i++){
+    db.addHistoricData(allBzProductData[i].name,allBzProductData[i].sell_price,allBzProductData[i].buy_price,new Date().toISOString().slice(0, 19).replace('T', ' '),allBzProductData[i].one_hour_instasells,allBzProductData[i].one_hour_instabuys,new Date().toISOString().slice(11, 19));
+  }
 }

@@ -60,18 +60,15 @@ document.getElementById('getData').addEventListener('click', () => {
 });
 
 function setupSliders(){
-      // Select the input elements
-  // Function to sync the range input with the number input
   rangeInput.addEventListener('input', function () {
       numberInput.value = rangeInput.value;
   });
-
-  // Function to sync the number input with the range input
   numberInput.addEventListener('input', function () {
       rangeInput.value = numberInput.value;
   });
 
 }
+
   function createProductDiv(product){
     let searched = product.name;
     if(document.getElementById(searched) != null){
