@@ -144,7 +144,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(port,() => {
+server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
   getMayor();
   db.connectToDb();
@@ -198,7 +198,7 @@ function startPeriodicTasks() {
       } catch (error) {
         console.error("Error in writing bz data to db", error);
       }
-    },3600 * 1000);
+    },60 * 1000);
 }
 async function getMayor() {
   Mayor = await fetchApi("MAYOR");
@@ -276,10 +276,10 @@ function jsonToFile(filepath,data){
     });
 }
 
-function fileToJson(filepath) {
+async function fileToJson(filepath) {
     try {
-      const data = fs.readFileSync(filepath, 'utf8'); 
-      return JSON.parse(data); 
+      const data =  fs.readFileSync(filepath, 'utf8'); 
+      return await JSON.parse(data); 
     } catch (err) {
       console.error(`Error reading or parsing JSON file at ${filepath}:`, err);
       return null; 
