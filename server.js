@@ -86,6 +86,7 @@ var updating = true;
 var fetchAllProducts = true;
 var populatedb = true;
 var callDelay = 3 * 1000;
+var readingBzData = false;
 
 
 
@@ -181,7 +182,7 @@ function startPeriodicTasks() {
       } catch (error) {
         console.error("Error in writing bz data", error);
       }
-    }, callDelay);
+    }, callDelay * 2);
 
     setInterval(async () => {
       try {
@@ -223,13 +224,16 @@ function bzSearch(product){
 }
 
 function allBzDataToProduct(){
+  readingBzData = true;
   allBzProductData = [];
   for(product in bzData.products){
     allBzProductData.push(bzDataToProduct(product));
   }
+  readingBzData = false;
 }
 
 async function fetchBzData(){
+    while(readingBzData);
     bzData = await fetchApi("BAZAAR");
     jsonToFile(FILE_PATHS["BAZAAR"],JSON.stringify(bzData));
 }
