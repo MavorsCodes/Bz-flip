@@ -13,16 +13,18 @@ function allPageSetup(){
   startPeriodicUpdates(10 * 1000);
   setupSliders();
 }
+
+function editOutputs(editedHtml){
+  document.getElementById('outputs').innerHTML = editedHtml;
+}
 function getStartingData(){
-  fetch(`/data`, {
+  fetch(`/homepage`, {
     method: 'GET',
   })
-  .then(response => response.json())
-  .then(data => {
-  data = data.filter(a => ( ( (a.one_hour_instabuys || 0) >= treshholdbuys) && ( (a.one_hour_instasells || 0) >= treshholdsells) && ((a.margin || 0) > min_margin && (a.coins_per_hour || 0) > min_coins_per_hour)));
-  data.sort((a, b) =>  b.coins_per_hour - a.coins_per_hour);
-    for(product in data)
-      createProductDiv(data[product]);
+  .then(response => response.text())
+  .then(html => {
+    editOutputs(html);
+    console.log("Homepage HTML loaded successfully");
   })
   .catch(error => console.error('Error:', error));
 }
@@ -37,26 +39,26 @@ function startPeriodicUpdates(delay){
   }, delay);
 }
 
-document.getElementById('getData').addEventListener('click', () => {
-    treshholdbuys = rangeInput.value;
-    const params = new URLSearchParams({
-      
-        address : document.getElementById('address').value,
-        product : document.getElementById('search').value
-    });
-  
-    fetch(`/search?${params.toString()}`, {
-      method: 'GET',
-    })
-      .then(response => response.json())
-      .then(data => {
-        data = data.filter(a => ( ( (a.one_hour_instabuys || 0) >= treshholdbuys) && ( (a.one_hour_instasells || 0) >= treshholdsells) ));
-        data.sort((a, b) =>  b.coins_per_hour - a.coins_per_hour);
-          clearProducts();
-          for(product in data)
-            createProductDiv(data[product])
-      })
-      .catch(error => console.error('Error:', error));
+document.getElementById('Search').addEventListener('click', () => {
+  updateSearchParams();
+  const params = new URLSearchParams({
+    address: document.getElementById('address').value,
+    product: document.getElementById('search').value,
+    treshholdsells: treshholdsells,
+    treshholdbuys: treshholdbuys,
+    min_coins_per_hour: min_coins_per_hour,
+    min_margin: min_margin,
+    min_coins_per_hour: min_coins_per_hour,
+  });
+
+  fetch(`/search?${params.toString()}`, {
+    method: 'GET',
+  })
+  .then(response => response.text())
+  .then(html => {
+    editOutputs(html);
+  })
+  .catch(error => console.error('Error:', error));
 });
 
 function setupSliders(){
@@ -69,61 +71,51 @@ function setupSliders(){
 
 }
 
-  function createProductDiv(product){
-    let searched = product.name;
-    if(document.getElementById(searched) != null){
-      document.getElementById(searched).remove();
-      console.log("Updating data");
-    }
-    let output = document.createElement("div");
-    output.innerHTML = createProductHtml(product);
-    output.id = (searched);
-    output.classList.add("output");
-    document.getElementById("outputs").appendChild(output); 
-  }
-
-  function createProductHtml(product){
-    return `<img src="${product.img}" alt="img of ${product.name}">
-          <p><b>${product.name.toLowerCase().replace(/_/g, ' ').replace(/enchantment/gi, '')}</b> <br><br>
-          Buy Price: ${product.buy_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
-          One-Hour Instabuys: ${product.one_hour_instabuys.toFixed(1)}<br>
-          Sell Price: ${product.sell_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins<br>
-          One-Hour Instasells: ${product.one_hour_instasells.toFixed(1)}<br>
-          Margin: ${product.margin.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
-          Coins per Hour ${product.coins_per_hour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins</p>
-          ` 
-  }
+function updateSearchParams() {
+treshholdbuys = numberInput.value || 0;
+}
   
   function clearProducts(){
     document.getElementById("outputs").replaceChildren();
   }
 
-  function updateVisibleProducts(){
-    const outputsDiv = document.getElementById('outputs');  // Get the parent div
-    const children = outputsDiv.children;  // Get the child elements of 'outputs'
-    const idsArray = [];  // Array to store the IDs of the children
-
-    // Loop through each child element
-    for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        if (child.id) {  // Check if the child has an ID
-            idsArray.push(child.id);  // Save the ID to the array
-        }
-    }
-    fetch(`/data`, {
-      method: 'GET',
+  function updateVisibleProducts() {
+    const idsArray = getCurrentProducts();
+    if (!idsArray.length) return;
+    console.log("Updating visible products");
+    const params = {
+      address: document.getElementById('address').value,
+      products: idsArray,
+      treshholdsells: treshholdsells,
+      treshholdbuys: treshholdbuys,
+      min_coins_per_hour: min_coins_per_hour,
+      min_margin: min_margin,
+      min_coins_per_hour: min_coins_per_hour,
+    };
+    fetch('/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
     })
-    .then(response => response.json())
-    .then(data => {
-    data = data.filter(a => ( ( (a.one_hour_instabuys || 0) >= treshholdbuys) && ( (a.one_hour_instasells || 0) >= treshholdsells) ));
-    data.sort((a, b) =>  b.coins_per_hour - a.coins_per_hour);
-      for(product in data)
-          if(idsArray.includes(data[product].name))
-            createProductDiv(data[product]);
-    })
-    .catch(error => console.error('Error:', error));
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('outputs').innerHTML = html;
+      })
+      .catch(error => console.error('Error:', error));
   }
-
+  function getCurrentProducts(){
+    const outputsDiv = document.getElementById('outputs');
+    const children = Array.from(outputsDiv.children).filter(child => child.tagName === 'DIV');
+    const idsArray = [];
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].id) {
+        idsArray.push(children[i].id);
+      }
+    }
+    return idsArray;
+  }
   function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/

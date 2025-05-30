@@ -4,6 +4,7 @@ const path = require('path');
 const url = require('url');
 const mysql = require('mysql');
 const db = require ('./db.js');
+const { create } = require("domain");
 
 const port = 3000;
 const API_KEY = "LUKO E' UNA PUTTANA";
@@ -78,28 +79,58 @@ class Product{
   }
 }
 
-var bzData;
-var ahData;
-var allBzProductData;
-var Mayor;
+var bzData;//all bz data as json
+var ahData;//all ah data as json
+var allBzProductData;//all bz data as product class objects
+var Mayor;//current mayor name as a string
 var updating = true;
 var fetchAllProducts = true;
-var populatedb = true;
+var populatedb = false;
 var callDelay = 3 * 1000;
-var readingBzData = false;
+var readingBzData = false;//binary semaphore to avoid reading bz data while it is being written
 
 
 
 const server = http.createServer((req, res) => {
-    if (req.url.startsWith('/data') && req.method === 'GET') {
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(allBzProductData)); 
+    if (req.url.startsWith('/homepage') && req.method === 'GET') {
+      response = HomeProductPage();
+        res.setHeader('Content-Type', 'text/html');
+        res.end(response);
     }
     else if (req.url.startsWith('/search') && req.method === 'GET') {
-      const parsedUrl = url.parse(req.url, true);
-      const queryParams = parsedUrl.query;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(bzSearch(queryParams.product))); 
+      if (!allBzProductData || !Array.isArray(allBzProductData) || allBzProductData.length === 0) {
+        res.setHeader('Content-Type', 'text/html');
+        res.end('<h1>Bazaar data is still loading. Please wait a bit before trying to search again.</h1>');
+      } else {
+        const parsedUrl = url.parse(req.url, true);
+        const queryParams = parsedUrl.query;
+        const response = HTMLSearchedPage(queryParams);
+        res.setHeader('Content-Type', 'text/html');
+        res.end(response);
+      }
+    }
+    else if (req.url.startsWith('/update') && req.method === 'POST') {
+        if (!allBzProductData || !Array.isArray(allBzProductData) || allBzProductData.length === 0) {
+          res.setHeader('Content-Type', 'text/html');
+          res.end('<h1>Bazaar data is still loading. Please wait a bit before trying to search again.</h1>');
+        } else {
+            let body = '';
+            req.on('data', chunk => {
+            body += chunk;
+            });
+            req.on('end', () => {
+            let queryParams;
+            try {
+              queryParams = JSON.parse(body);
+            } catch (e) {
+              queryParams = {};
+            }
+            const response = updateVisibleProducts(queryParams);
+            res.setHeader('Content-Type', 'text/html');
+            res.end(response);
+            });
+            return;
+        }
     }
     else {
 
@@ -147,7 +178,7 @@ const server = http.createServer((req, res) => {
 server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
   getMayor();
-  db.connectToDb();
+  //db.connectToDb(); TODO fix this
   
   bzData = fileToJson(FILE_PATHS["BAZAAR"]);
   ahData = fileToJson(FILE_PATHS["AUCTIONS"]);
@@ -155,7 +186,7 @@ server.listen(port, () => {
   if(updating) startPeriodicTasks();
   if(fetchAllProducts) getAllBzProducts();
   if(populatedb) populateBzDb();
-  writeallBzToDb();
+  //writeallBzToDb(); TODO fix this
 });
 
 function startPeriodicTasks() {
@@ -194,7 +225,7 @@ function startPeriodicTasks() {
 
     setInterval(async () => {
       try {
-        writeallBzToDb();
+        //writeallBzToDb(); TODO implement this
       } catch (error) {
         console.error("Error in writing bz data to db", error);
       }
@@ -208,19 +239,7 @@ function bzDataToProduct(product){
    if (product in bzData.products){
     return new Product(bzData.products[product].product_id,bzData.products[product].buy_summary[0]?.pricePerUnit || 0,(bzData.products[product].quick_status.buyMovingWeek/7)/24,bzData.products[product].sell_summary[0]?.pricePerUnit || 0,(bzData.products[product].quick_status.sellMovingWeek/7)/24);
    } 
-   return "COULDN'T FIND THE PRODUCT YOU'RE LOOKING FOR";
-}
-
-function bzSearch(product){
-  let product_ids = Object.keys(bzData.products).filter(product_id =>{
-    const transformedElement = product.replace(/\s+/g, '_').toUpperCase();
-    return product_id.includes(transformedElement);
-  });
-  let data = []
-  for(product in product_ids){
-    data.push(bzDataToProduct(product_ids[product]));
-  }
-  return data;
+   return null;
 }
 
 function allBzDataToProduct(){
@@ -306,4 +325,93 @@ function writeallBzToDb(){
  for(let i = 0; i < allBzProductData.length; i++){
     db.addHistoricData(allBzProductData[i].name,allBzProductData[i].sell_price,allBzProductData[i].buy_price,new Date().toISOString().slice(0, 19).replace('T', ' '),allBzProductData[i].one_hour_instasells,allBzProductData[i].one_hour_instabuys,new Date().toISOString().slice(11, 19));
   }
+}
+
+function returnProductHtml(product){
+    return `<img src="${product.img}" alt="img of ${product.name}">
+          <p><b>${product.name.toLowerCase().replace(/_/g, ' ').replace(/enchantment/gi, '')}</b> <br><br>
+          Buy Price: ${product.buy_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
+          One-Hour Instabuys: ${product.one_hour_instabuys.toFixed(1)}<br>
+          Sell Price: ${product.sell_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins<br>
+          One-Hour Instasells: ${product.one_hour_instasells.toFixed(1)}<br>
+          Margin: ${product.margin.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
+          Coins per Hour ${product.coins_per_hour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins</p>
+          ` 
+}
+
+function bzSearch(queryParams){//TODO FIX FILTERING
+  if (!queryParams) return sortProducts([...allBzProductData]);
+  if (!allBzProductData || !Array.isArray(allBzProductData)) return [];
+
+  // Convert queryParams to object if it's a string (for backward compatibility)
+  let params = typeof queryParams === "string" ? { product: queryParams } : queryParams;
+
+  let filteredProducts = allBzProductData.filter(product => {
+    if (!product || !product.name || !product.name.toLowerCase().includes(params.product?.toLowerCase() || "")) return false;
+
+    // Filter by product name (partial match, case-insensitive)
+    if (params.product && !product.name.toLowerCase().includes(params.product.toLowerCase())) {
+      return false;
+    }
+
+    // Filter by minCoinsPerHour if provided
+    if (params.minCoinsPerHour && product.coins_per_hour < Number(params.minCoinsPerHour)) {
+      return false;
+    }
+
+    // Filter by maxCoinsPerHour if provided
+    if (params.maxCoinsPerHour && product.coins_per_hour > Number(params.maxCoinsPerHour)) {
+      return false;
+    }
+
+    // Add more filters as needed (e.g., minMargin, maxMargin, etc.)
+    if (params.minMargin && product.margin < Number(params.minMargin)) {
+      return false;
+    }
+    if (product.one_hour_instabuys < Number(params.treshholdbuys)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  return  sortProducts(filteredProducts);
+}
+function sortProducts(filteredProducts){
+  return filteredProducts.sort((a, b) => b.coins_per_hour - a.coins_per_hour);
+}
+function createProductDiv(product) {
+  return `<div id="${ product.name}" class="output">${returnProductHtml(product)}</div>`;
+}
+
+function createProductDivs(queryParams) {
+  let productDivs = "";
+  let products = bzSearch(queryParams.product);
+  if (!products || products.length === 0) {
+    return `<h1>No products found</h1>`;
+  }
+  for (let i = 0; i < products.length; i++) {
+    productDivs += createProductDiv(products[i]);
+  }
+  return productDivs;
+}
+
+function HTMLSearchedPage(queryParams){
+  return createProductDivs(queryParams);
+}
+
+function HomeProductPage(){
+  return HTMLSearchedPage({ product: "" });
+}
+
+function updateVisibleProducts(queryParams) {
+  let currentProducts = [];
+  if (queryParams && Array.isArray(queryParams.products)) {
+    for (const id of queryParams.products) {
+      const product = allBzProductData.find(p => p && p.name === id);
+      if (product) currentProducts.push(product);
+    }
+  }
+  const productDivs = currentProducts.map(product => createProductDiv(product)).join('');
+  return productDivs;
 }
