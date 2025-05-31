@@ -4,7 +4,6 @@ const path = require('path');
 const url = require('url');
 const mysql = require('mysql');
 const db = require ('./db.js');
-const { create } = require("domain");
 
 const port = 3000;
 const API_KEY = "LUKO E' UNA PUTTANA";
@@ -88,15 +87,18 @@ var fetchAllProducts = true;
 var populatedb = false;
 var callDelay = 3 * 1000;
 var readingBzData = false;//binary semaphore to avoid reading bz data while it is being written
+let cachedResponse = null; // Cache for the homepage response
 
 
 
 const server = http.createServer((req, res) => {
     if (req.url.startsWith('/homepage') && req.method === 'GET') {
-      response = HomeProductPage();
+        if(cachedResponse != null) response = getHomeProductPage();
+        else response = HTMLSearchedPage({ product: "" });
         res.setHeader('Content-Type', 'text/html');
         res.end(response);
     }
+    
     else if (req.url.startsWith('/search') && req.method === 'GET') {
       if (!allBzProductData || !Array.isArray(allBzProductData) || allBzProductData.length === 0) {
         res.setHeader('Content-Type', 'text/html');
@@ -132,6 +134,18 @@ const server = http.createServer((req, res) => {
             return;
         }
     }
+      else if (req.url === '/favicon.ico' && req.method === 'GET') {
+    const iconPath = path.join(__dirname, 'ASSETS', 'favicon.ico');
+    fs.readFile(iconPath, (err, icon) => {
+      if (err) {
+        res.writeHead(404);
+        res.end();
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'image/x-icon' });
+      res.end(icon);
+    });
+  }
     else {
 
     let filePath = '.' + req.url;
@@ -175,16 +189,16 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(port, () => {
+server.listen(port, async () => {
   console.log(`Server running at http://localhost:${port}/`);
   getMayor();
   //db.connectToDb(); TODO fix this
   
-  bzData = fileToJson(FILE_PATHS["BAZAAR"]);
-  ahData = fileToJson(FILE_PATHS["AUCTIONS"]);
+  bzData = await fileToJson(FILE_PATHS["BAZAAR"]);
+  ahData = await fileToJson(FILE_PATHS["AUCTIONS"]);
   allBzDataToProduct();
   if(updating) startPeriodicTasks();
-  if(fetchAllProducts) getAllBzProducts();
+  if(fetchAllProducts) writeAllProductsToJson();
   if(populatedb) populateBzDb();
   //writeallBzToDb(); TODO fix this
 });
@@ -212,6 +226,22 @@ function startPeriodicTasks() {
         allBzDataToProduct();
       } catch (error) {
         console.error("Error in writing bz data", error);
+      }
+    }, callDelay * 2);
+    setInterval(async () => {
+      try {
+    cachedResponse = await HTMLSearchedPage({
+    address: 'BAZAAR',
+    product: "",
+    treshholdsells: 0,
+    treshholdbuys: 0,
+    min_coins_per_hour: 0,
+    min_margin:0,
+    min_coins_per_hour: 0,
+    show_only_profit: "true",//TODO WTF IS THIS OMG CHANGE THIS SO IT TAKES A BOOLEAN AND NOT A STRING
+    });
+      } catch (error) {
+        console.error("Error in caching Home Page", error);
       }
     }, callDelay * 2);
 
@@ -305,10 +335,10 @@ async function fileToJson(filepath) {
     }
   }
   
-function getAllBzProducts(){
+function writeAllProductsToJson(){
     let allProducts = [];
     for (product in bzData.products){
-        allProducts.push(bzData.products[product].product_id);
+        allProducts.push(normalize(bzData.products[product].product_id));
     }
     jsonToFile(FILE_PATHS["ALL_PRODUCTS"],JSON.stringify(allProducts));
 }
@@ -338,45 +368,33 @@ function returnProductHtml(product){
           Coins per Hour ${product.coins_per_hour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins</p>
           ` 
 }
-
-function bzSearch(queryParams){//TODO FIX FILTERING
-  if (!queryParams) return sortProducts([...allBzProductData]);
+    /* STRUCTURE OF QUERY PARAMS
+    address ='BAZAAR'
+    min_coins_per_hour ='0'
+    min_margin ='0'
+    product ='ANCIENT CLAW'
+    treshholdbuys ='0'
+    treshholdsells ='0'
+    show_only_profit = "true"*/
+function bzSearch(queryParams){//TODO ADD MORE FILTERING AND SORTING OPTIONS
   if (!allBzProductData || !Array.isArray(allBzProductData)) return [];
 
   // Convert queryParams to object if it's a string (for backward compatibility)
   let params = typeof queryParams === "string" ? { product: queryParams } : queryParams;
-
   let filteredProducts = allBzProductData.filter(product => {
-    if (!product || !product.name || !product.name.toLowerCase().includes(params.product?.toLowerCase() || "")) return false;
+    if (!product) return false;
+    if(product.one_hour_instabuys < params.treshholdbuys) return false;
+    if(product.one_hour_instasells < params.treshholdsells) return false;
+    if(product.coins_per_hour < params.min_coins_per_hour) return false;
+    if(product.coins_per_hour <= 1 && params.show_only_profit == "true") return false
 
-    // Filter by product name (partial match, case-insensitive)
-    if (params.product && !product.name.toLowerCase().includes(params.product.toLowerCase())) {
-      return false;
-    }
-
-    // Filter by minCoinsPerHour if provided
-    if (params.minCoinsPerHour && product.coins_per_hour < Number(params.minCoinsPerHour)) {
-      return false;
-    }
-
-    // Filter by maxCoinsPerHour if provided
-    if (params.maxCoinsPerHour && product.coins_per_hour > Number(params.maxCoinsPerHour)) {
-      return false;
-    }
-
-    // Add more filters as needed (e.g., minMargin, maxMargin, etc.)
-    if (params.minMargin && product.margin < Number(params.minMargin)) {
-      return false;
-    }
-    if (product.one_hour_instabuys < Number(params.treshholdbuys)) {
-      return false;
-    }
-
+    if(!normalize(product.name).includes(normalize(params.product))) return false;
     return true;
   });
 
-  return  sortProducts(filteredProducts);
+  return sortProducts(filteredProducts);
 }
+
 function sortProducts(filteredProducts){
   return filteredProducts.sort((a, b) => b.coins_per_hour - a.coins_per_hour);
 }
@@ -386,7 +404,7 @@ function createProductDiv(product) {
 
 function createProductDivs(queryParams) {
   let productDivs = "";
-  let products = bzSearch(queryParams.product);
+  let products = bzSearch(queryParams);
   if (!products || products.length === 0) {
     return `<h1>No products found</h1>`;
   }
@@ -396,12 +414,15 @@ function createProductDivs(queryParams) {
   return productDivs;
 }
 
-function HTMLSearchedPage(queryParams){
+function HTMLSearchedPage(queryParams){//TODO SIMPLIFY THE BOOLEAN LOGIC
+  if(cachedResponse == null){
+    return "<h1>Seems the server just woke up! Give it some time for coffe!<h1>"
+  }
   return createProductDivs(queryParams);
 }
 
-function HomeProductPage(){
-  return HTMLSearchedPage({ product: "" });
+function getHomeProductPage(){
+  return cachedResponse;
 }
 
 function updateVisibleProducts(queryParams) {
@@ -414,4 +435,12 @@ function updateVisibleProducts(queryParams) {
   }
   const productDivs = currentProducts.map(product => createProductDiv(product)).join('');
   return productDivs;
+}
+
+function normalize(str) {
+  if (!typeof str === 'string') return;
+  return str
+    ?.toLowerCase()
+    .replace(/[_\s]+/g, ' ')  // convert underscores and multiple spaces to single space
+    .trim().toString();
 }
