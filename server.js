@@ -42,9 +42,9 @@ class Product{
   constructor(name,buy_price,one_hour_instabuys,sell_price,one_hour_instasells){
     this.name = name;
     if (IMG_PATHS[name] != null) {
-      this.img = this.loadImage(IMG_PATHS[name]);
+      this.img = `/images/${path.basename(IMG_PATHS[name])}`;
     } else {
-      this.img = this.getPlaceholderImage();
+      this.img = `/images/WIP.png`;
     }
     this.buy_price = buy_price;
     this.one_hour_instabuys = one_hour_instabuys;
@@ -82,17 +82,29 @@ var bzData;//all bz data as json
 var ahData;//all ah data as json
 var allBzProductData;//all bz data as product class objects
 var Mayor;//current mayor name as a string
-var updating = true;
-var fetchAllProducts = true;
-var populatedb = false;
-var callDelay = 3 * 1000;
+const updating = true;
+const fetchAllProducts = true;
+const populatedb = false;
+const callDelay = 3 * 1000;
 var readingBzData = false;//binary semaphore to avoid reading bz data while it is being written
-let cachedResponse = null; // Cache for the homepage response
-
+var cachedResponse = null; // Cache for the homepage response
+var isWritingBazaarJSON = false;
 
 
 const server = http.createServer((req, res) => {
-    if (req.url.startsWith('/homepage') && req.method === 'GET') {
+      if (req.url.startsWith('/images/')) {
+      const imgPath = path.join(__dirname, 'ASSETS', 'PRODUCTS', req.url.replace('/images/', ''));
+      fs.readFile(imgPath, (err, data) => {
+        if (err) {
+          res.writeHead(404);
+          return res.end();
+        }
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        res.end(data);
+      });
+      return;
+    }
+    else if (req.url.startsWith('/homepage') && req.method === 'GET') {
         if(cachedResponse != null) response = getHomeProductPage();
         else response = HTMLSearchedPage({ product: "" });
         res.setHeader('Content-Type', 'text/html');
@@ -191,46 +203,47 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, async () => {
   console.log(`Server running at http://localhost:${port}/`);
-  getMayor();
-  //db.connectToDb(); TODO fix this
-  
-  bzData = await fileToJson(FILE_PATHS["BAZAAR"]);
-  ahData = await fileToJson(FILE_PATHS["AUCTIONS"]);
-  allBzDataToProduct();
+  await getMayor();
+  await loadInitialData();
   if(updating) startPeriodicTasks();
   if(fetchAllProducts) writeAllProductsToJson();
   if(populatedb) populateBzDb();
-  //writeallBzToDb(); TODO fix this
 });
 
+async function loadInitialData() {
+  bzData = await fileToJson(FILE_PATHS["BAZAAR"]);
+  ahData = await fileToJson(FILE_PATHS["AUCTIONS"]);
+  allBzDataToProduct();
+}
 function startPeriodicTasks() {
 
     setInterval(async () => {
         try {
-          await fetchAhData();
+           fetchAhData();
         } catch (error) {
           console.error("Error in fetching ah data", error);
         }
     }, callDelay);
 
-    setInterval(async () => {
+    setInterval(async () => {//CALL HYPIXEL API AND WRITE TO FILE
         try {
-          await fetchBzData();
+           fetchBzData();
         } catch (error) {
           console.error("Error in fetching bz data", error);
         }
     }, callDelay);
 
-    setInterval(async () => {
+    setInterval(async () => {//WRITE ALL BZ DATA TO PRODUCT CLASS FORMAT
       try {
         allBzDataToProduct();
       } catch (error) {
         console.error("Error in writing bz data", error);
       }
     }, callDelay * 2);
-    setInterval(async () => {
+
+    setInterval(async () => {//UPDATE THE CACHED PAGE
       try {
-    cachedResponse = await HTMLSearchedPage({
+    cachedResponse =  HTMLSearchedPage({
     address: 'BAZAAR',
     product: "",
     treshholdsells: 0,
@@ -243,7 +256,7 @@ function startPeriodicTasks() {
       } catch (error) {
         console.error("Error in caching Home Page", error);
       }
-    }, callDelay * 2);
+    }, callDelay * 3);
 
     setInterval(async () => {
       try {
@@ -281,10 +294,19 @@ function allBzDataToProduct(){
   readingBzData = false;
 }
 
-async function fetchBzData(){
-    while(readingBzData);
-    bzData = await fetchApi("BAZAAR");
-    jsonToFile(FILE_PATHS["BAZAAR"],JSON.stringify(bzData));
+async function fetchBzData() {
+   // while (readingBzData); // Wait if someone is reading
+    readingBzData = true;  // Lock for writing
+
+    try {
+        let buffer = await fetchApi("BAZAAR");
+        if(buffer && buffer.products) bzData = buffer;
+        await jsonToFile(FILE_PATHS["BAZAAR"], JSON.stringify(bzData));
+    } catch (err) {
+        console.error("Error writing BZ data", err);
+    } finally {
+        readingBzData = false; // Release lock
+    }
 }
 
 async function fetchAhData(){
@@ -326,14 +348,14 @@ function jsonToFile(filepath,data){
 }
 
 async function fileToJson(filepath) {
-    try {
-      const data =  fs.readFileSync(filepath, 'utf8'); 
-      return await JSON.parse(data); 
-    } catch (err) {
-      console.error(`Error reading or parsing JSON file at ${filepath}:`, err);
-      return null; 
-    }
+  try {
+    const data = await fs.promises.readFile(filepath, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(`Error reading or parsing JSON file at ${filepath}:`, err);
+    return null;
   }
+}
   
 function writeAllProductsToJson(){
     let allProducts = [];
