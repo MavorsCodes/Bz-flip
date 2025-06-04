@@ -200,6 +200,23 @@ function updateSearchParams() {
       searchIcon.click(); // simulate click
     }
   });
+      fetch('/mayorname')
+      .then(response => response.text())
+      .then(name => {
+        document.getElementById('mayorName').textContent = name;
+        document.getElementById('mayorImg').src = '/mayors/' + name + '.png';
+      })
+      .catch(error => {
+        console.error('Error fetching name:', error);
+      });
+
+    function toggleAdvancedSearch() {
+        const advancedSearch = document.getElementById('advancedSearch');
+        const button = document.getElementById('toggleButton');
+        
+        advancedSearch.classList.toggle('collapsed');
+        button.classList.toggle('rotated');
+    }
 
   });
 

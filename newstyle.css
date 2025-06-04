@@ -62,7 +62,6 @@ body{
   width: 1.5vw;
   aspect-ratio: 1/1;
   margin-right: 0.4vw;
-  font-size: 1.2vw; /* scale icon properly */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -323,4 +322,62 @@ input[type="range"]::-webkit-slider-thumb {
 /* Show checkmark only when checked */
 .custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
   opacity: 1;
+}
+
+#icon img{
+  display: inline-flex;
+  width: 5.46875vw;
+}
+
+#icon{  
+  display: flex;
+  align-items: center; /* vertically align icon & text */
+  justify-content: center;
+  margin-top: 2vw;
+    gap: .5vw;
+     margin-bottom: 1vw;
+}
+.title{
+  display: block;
+  color:#FFFFFF;
+  font-weight: bold;
+  text-align: left;
+  font-size: 2.08vw;
+  margin: 0;
+}
+#title{  
+  display: inline;
+}
+
+.navs{
+  width: 100%;
+}
+
+.navCard {
+  text-decoration: none;
+  display: flex;                  /* Use Flexbox */
+  align-items: center;           /* Vertically center content */
+  justify-content: center;       /* Horizontally center content */
+  border: 2px solid #641B2E;
+  background-color: #8A2D3B;
+  width: 100%;
+  aspect-ratio: 3/1;
+  text-align: center;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 1.8vw;
+}
+.navCard:hover{
+  background-color: #cf475c;
+}
+.credits {
+  text-decoration: none;
+  color: #000000;
+  margin: auto;
+}
+footer {
+  position: absolute;
+  bottom: 1vw;
+  width: 100%;
+  text-align: center;
 }

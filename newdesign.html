@@ -51,7 +51,20 @@
   </div>
 
 <div id="leftSidebar" class="sidebar">
-    <div id="icon"></div>
+    <div id="icon"><img src="/icons/icon.webp">
+    <div id="title">    
+      <p class="title">Bz</p>
+      <p class="title">Flipper</p>
+    </div>
+  </div>
+    <nav class="navs">
+      <a  class="navCard" href="/realhomepage/">Home</a>
+      <a  class="navCard" href="/flipping/">Flipping</a>
+      <a  class="navCard" href="/crafting/">Crafting</a>
+      <a  class="navCard" href="/forging/">Forging</a>
+      <a  class="navCard" href="/npc/">Npc</a>
+      <a  class="navCard" href="/reversenpc/">Reverse Npc</a>
+    </nav>
 </div>
 <div id="rightSidebar" class="sidebar">
     <p id="currentMayor">Current Mayor</p>
@@ -59,26 +72,11 @@
             <img id="mayorImg">
     </div>
     <p id="mayorName"></p>
+    <footer>
+      <p class="credits">made by Mavors</p>
+      <a class="credits" href="https://github.com/MavorsCodes/Bz-flip">github</a>
+    </footer>
 </div>
-  <script>
-    fetch('/mayorname')
-      .then(response => response.text())
-      .then(name => {
-        document.getElementById('mayorName').textContent = name;
-        document.getElementById('mayorImg').src = '/mayors/' + name + '.png';
-      })
-      .catch(error => {
-        console.error('Error fetching name:', error);
-      });
-
-    function toggleAdvancedSearch() {
-        const advancedSearch = document.getElementById('advancedSearch');
-        const button = document.getElementById('toggleButton');
-        
-        advancedSearch.classList.toggle('collapsed');
-        button.classList.toggle('rotated');
-    }
-  </script>
   <script src="client.js"></script>
 </body>
 </html>
