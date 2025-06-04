@@ -6,6 +6,3 @@ ASSETS/
 
 # Ignore node modules
 node_modules/
-
-# Ignore build files
-*.json
