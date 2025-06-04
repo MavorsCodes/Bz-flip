@@ -15,22 +15,17 @@ const API_ADDRESSES = {
     MAYOR: "https://api.hypixel.net/v2/resources/skyblock/election"
 };
 
-const FILE_PATHS = {
-    AUCTIONS: "JSON/auctions.json",
-    BAZAAR: "JSON/bazaar.json",
-    ALL_PRODUCTS : "JSON/allproducts.json"
-}
 
 class Product{
   constructor(name,buy_price,one_hour_instabuys,sell_price,one_hour_instasells){
     this.name = name;
-    if (name.includes("ENCHANTMENT")) {
-      this.img = `/images/ENCHANTED_BOOK`;
-    } else if (ImgPaths[name] != null) {
-      this.img = `/images/${name}`;
-    } else {
-      this.img = `/images/WIP`;
-    }
+  if (name.includes("ENCHANTMENT")) {
+    this.img = `/images/ENCHANTED_BOOK`;
+  } else if (availableImages.has(name)) {
+    this.img = `/images/${name}`;
+  } else {
+    this.img = `/images/WIP`;
+  }
     this.buy_price = buy_price;
     this.one_hour_instabuys = one_hour_instabuys;
     this.sell_price = sell_price;
@@ -53,10 +48,15 @@ const updating = true;
 const fetchAllProducts = true;
 const populatedb = false;
 const callDelay = 3 * 1000;
-var ImgPaths;
 var readingBzData = false;//binary semaphore to avoid reading bz data while it is being written
 var cachedResponse = null; // Cache for the homepage response
-var isWritingBazaarJSON = false;
+var isWritingBazaarJSON = false
+const imageDir = path.join(__dirname, 'ASSETS', 'PRODUCTS');
+const availableImages = new Set(
+  fs.readdirSync(imageDir)
+    .filter(file => file.endsWith('.png'))
+    .map(file => file.replace('.png', ''))
+);
 
 const server = http.createServer((req, res) => {
       if (req.url.startsWith('/images/')) {
@@ -204,9 +204,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, async () => {
   console.log(`Server running at http://localhost:${port}/`);
-  const filePath = path.join(__dirname, "/IMGTOOLS/joined.json");
-  ImgPaths = await fileToJson(filePath);
-
   await getMayor();
   await loadInitialData();
   if(updating) startPeriodicTasks();

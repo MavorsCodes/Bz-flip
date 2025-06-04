@@ -110,8 +110,8 @@ async function updateAndSave() {
 }
 
 async function updateJoined() {
-    //await getImages.imgs();
-    //await hypixelItems.items();
+    await getImages.imgs();
+    await hypixelItems.items();
     await join.join();
 }
 updateAndSave();
