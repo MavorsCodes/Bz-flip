@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bazaar Flipper</title>
+  <link rel="stylesheet" href="/newstyle.css">
+</head>
+<body>
+
+  <div id="mainContent">
+    <div class="searchWrapper">
+
+        <input type="text" class="searchInput" id="search" autocomplete="off" spellcheck="false">
+        <img id="searchIcon" class="searchIcon" src="/icons/searchIcon.png">
+    </div>
+    <p id="productAmount">Showing 0 products</p>
+    <div id="advancedSearchWrapper">
+        <div id="advancedSearch"  class="collapsed">
+          <div id="filterWrapper" class="filterWrapper">
+            <p id="filtersTitle">Filters</p>
+            <p >sort by</p>
+            <select id="sortby">
+              <option value="coinsPerHour">Coins per Hour</option>
+              <option value="profit">Profit</option>
+              <option value="profit%">Profit%</option>
+            </select>
+            <p >min one-hour instabuys:</p> <p class="filtersNumber" id="instabuysText"  contenteditable="true" onkeydown="return event.key !== 'Enter'">0</p>
+            <input type="range" max="1000000" min="0" step="10" value="0" id="instabuysRange">
+            <p >min one-hour instasells:</p><p class="filtersNumber" id="instasellsText">0</p>
+            <input type="range" max="1000000" min="0" value="0" step="10" id="instasellsRange">
+            <p >max buy price:</p><p class="filtersNumber" id="maxbuyText">0</p>
+            <input type="range" max="1000000000" min="0" value="1000000000" id="maxbuyRange">
+            <p >min coins per hour:</p><p class="filtersNumber" id="mincoinsText">0</p>
+            <input type="range" max="100000000" min="0" value="0" id="mincoinsRange">
+            <label class="custom-checkbox">
+              <input type="checkbox" id="onlyshowprofit" checked="true"/>
+              <span class="checkmark"></span>
+            </label>
+            <p>only show profit</p>
+          </div>
+        </div>
+        <div id="toggleButton" onclick="toggleAdvancedSearch(this)"></div>
+    </div>
+    <div id="outputs">
+    </div>
+  </div>
+
+<div id="leftSidebar" class="sidebar">
+    <div id="icon"></div>
+</div>
+<div id="rightSidebar" class="sidebar">
+    <p id="currentMayor">Current Mayor</p>
+    <div id="mayorCircle">
+            <img id="mayorImg">
+    </div>
+    <p id="mayorName"></p>
+</div>
+  <script>
+    fetch('/mayorname')
+      .then(response => response.text())
+      .then(name => {
+        document.getElementById('mayorName').textContent = name;
+        document.getElementById('mayorImg').src = '/mayors/' + name + '.png';
+      })
+      .catch(error => {
+        console.error('Error fetching name:', error);
+      });
+
+    function toggleAdvancedSearch() {
+        const advancedSearch = document.getElementById('advancedSearch');
+        const button = document.getElementById('toggleButton');
+        
+        advancedSearch.classList.toggle('collapsed');
+        button.classList.toggle('rotated');
+    }
+  </script>
+  <script src="client.js"></script>
+</body>
+</html>

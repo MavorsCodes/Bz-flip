@@ -3,7 +3,7 @@ const http = require('http');
 const path = require('path');
 const url = require('url');
 const mysql = require('mysql');
-const db = require ('./db.js');
+//const db = require ('./db.js');
 
 const port = 3000;
 const API_KEY = "LUKO E' UNA PUTTANA";
@@ -104,6 +104,34 @@ const server = http.createServer((req, res) => {
       });
       return;
     }
+    else if(req.url.startsWith('/mayors/')) {
+      const imgPath = path.join(__dirname, 'ASSETS', 'MAYORS', req.url.replace('/mayors/', ''));
+      fs.readFile(imgPath, (err, data) => {
+        if (err) {
+          res.writeHead(404);
+          return res.end();
+        }
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        res.end(data);
+      });
+      return;
+    }
+        else if(req.url.startsWith('/icons/')) {
+      const imgPath = path.join(__dirname, 'ASSETS', 'ICONS', req.url.replace('/icons/', ''));
+      fs.readFile(imgPath, (err, data) => {
+        if (err) {
+          res.writeHead(404);
+          return res.end();
+        }
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        res.end(data);
+      });
+      return;
+    }
+    else if(req.url.startsWith('/mayorname')){
+      res.writeHead(200,{ 'Content-Type': 'text/plain' });
+      res.end(Mayor.mayor.name);
+    }
     else if (req.url.startsWith('/homepage') && req.method === 'GET') {
         if(cachedResponse != null) response = getHomeProductPage();
         else response = HTMLSearchedPage({ product: "" });
@@ -161,7 +189,7 @@ const server = http.createServer((req, res) => {
     else {
 
     let filePath = '.' + req.url;
-    if (filePath === './') filePath = './index.html';
+    if (filePath === './') filePath = './newdesign.html';//TODO FIXXXXXX
 
     const extname = path.extname(filePath);
     let contentType = 'text/html';
@@ -249,9 +277,10 @@ function startPeriodicTasks() {
     treshholdsells: 0,
     treshholdbuys: 0,
     min_coins_per_hour: 0,
-    min_margin:0,
+    maxbuyRange:Infinity,
     min_coins_per_hour: 0,
     show_only_profit: "true",//TODO WTF IS THIS OMG CHANGE THIS SO IT TAKES A BOOLEAN AND NOT A STRING
+    sortby:"coinsPerHour",
     });
       } catch (error) {
         console.error("Error in caching Home Page", error);
@@ -379,25 +408,26 @@ function writeallBzToDb(){
   }
 }
 
-function returnProductHtml(product){
+function returnProductHtml(product){//profit and margin are the same thing i'm just very very dumb
     return `<img src="${product.img}" alt="img of ${product.name}">
-          <p><b>${product.name.toLowerCase().replace(/_/g, ' ').replace(/enchantment/gi, '')}</b> <br><br>
-          Buy Price: ${product.buy_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
-          One-Hour Instabuys: ${product.one_hour_instabuys.toFixed(1)}<br>
+          <p class="productName">${product.name.toLowerCase().replace(/_/g, ' ').replace(/enchantment/gi, '')}</p>
+          <p>Buy Price: ${product.buy_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
+          One-Hour Instabuys: ${product.one_hour_instabuys.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}<br>
           Sell Price: ${product.sell_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins<br>
-          One-Hour Instasells: ${product.one_hour_instasells.toFixed(1)}<br>
-          Margin: ${product.margin.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
-          Coins per Hour ${product.coins_per_hour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins</p>
+          One-Hour Instasells: ${product.one_hour_instasells.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}<br>
+          Profit: ${product.margin.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
+          Coins per Hour: ${product.coins_per_hour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins</p>
           ` 
 }
     /* STRUCTURE OF QUERY PARAMS
     address ='BAZAAR'
     min_coins_per_hour ='0'
-    min_margin ='0'
-    product ='ANCIENT CLAW'
+    maxbuyRange ='infinity'
+    product =''
     treshholdbuys ='0'
     treshholdsells ='0'
-    show_only_profit = "true"*/
+    show_only_profit = "true"
+    sortby= 'coinsPerHour'*/
 function bzSearch(queryParams){//TODO ADD MORE FILTERING AND SORTING OPTIONS
   if (!allBzProductData || !Array.isArray(allBzProductData)) return [];
 
@@ -408,17 +438,31 @@ function bzSearch(queryParams){//TODO ADD MORE FILTERING AND SORTING OPTIONS
     if(product.one_hour_instabuys < params.treshholdbuys) return false;
     if(product.one_hour_instasells < params.treshholdsells) return false;
     if(product.coins_per_hour < params.min_coins_per_hour) return false;
+    if(product.buy_price > params.maxbuyRange) return false;
     if(product.coins_per_hour <= 1 && params.show_only_profit == "true") return false
 
     if(!normalize(product.name).includes(normalize(params.product))) return false;
     return true;
   });
 
-  return sortProducts(filteredProducts);
+  return sortProducts(filteredProducts,queryParams.sortby);
 }
 
-function sortProducts(filteredProducts){
-  return filteredProducts.sort((a, b) => b.coins_per_hour - a.coins_per_hour);
+function sortProducts(filteredProducts,sortby){
+  switch(sortby){
+    case 'coinsPerHour':
+      return filteredProducts.sort((a, b) => b.coins_per_hour - a.coins_per_hour);
+    case 'profit':
+      return filteredProducts.sort((a, b) => b.margin - a.margin);
+    case 'profit%':
+        return filteredProducts.sort((a, b) => {
+        const aPct = a.buy_price ? a.margin / a.buy_price : -Infinity;
+        const bPct = b.buy_price ? b.margin / b.buy_price : -Infinity;
+        return bPct - aPct;
+      });
+    default:
+      return filteredProducts;
+  }  
 }
 function createProductDiv(product) {
   return `<div id="${ product.name}" class="output">${returnProductHtml(product)}</div>`;

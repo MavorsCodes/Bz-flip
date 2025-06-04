@@ -1,0 +1,326 @@
+body{
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  align-items: center;     /* Center horizontally */
+  justify-content: flex-start; /* Align top */
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #8A2D3B;
+  font-family: 'Roboto Flex', sans-serif;
+  font-weight: 400;
+}
+
+.sidebar {
+  width:14.84%;
+  height: 100vh; /* full viewport height */
+  position: fixed; /* stick it to the side */
+  top: 0;
+  background-color:#641B2E; /* or your desired background */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} 
+
+#leftSidebar{
+    left: 0;
+}
+
+#rightSidebar{
+    right: 0;
+}
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  background-color: #f5d28c;
+  border-radius: 9999px;
+  width: 22.3vw;
+  aspect-ratio: 9 / 1;   
+  box-sizing: border-box;
+  margin-top: 10.09vh;
+  overflow: hidden; /* prevent children from overflowing */
+}
+
+/* Input inside the search bar */
+.searchInput {
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1 1 0%;
+  min-width: 0; /* <-- critical! */
+  font-size: 0.9vw;
+  color: #641B2E;
+  padding-left: 1vw;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* Search icon on the right */
+.searchIcon {
+  border-left: 2px solid #D3B778;
+  width: 1.5vw;
+  aspect-ratio: 1/1;
+  margin-right: 0.4vw;
+  font-size: 1.2vw; /* scale icon properly */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  image-rendering:crisp-edges;
+}
+
+.searchIcon:hover{
+    cursor: pointer;
+}
+
+#mayorImg {
+  width: 5.34vw;
+  height: 11.98vw;
+  object-fit: contain; /* ensures full height fits inside the circle */
+  object-position: center center;
+  display: block;
+  margin-top: 4vw;
+}
+#mayorCircle {
+  width: 8.59375vw;      /* 165px at 1920px screen width */
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f7dd9e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px auto;
+}
+
+#productAmount,
+#mayorName, #currentMayor{
+    color:#B1B1B1;
+    font-size: 2.08vw;
+    font-weight: bold;
+}
+
+#mayorName, #currentMayor{
+    margin-top: 1vh;
+    margin-bottom: 1.2vh;
+    color: #B1B1B1;
+    font-size: 2.08vw;
+    font-weight: bold;
+}
+#productAmount{
+    margin-bottom: 0;
+}
+#advancedSearchWrapper{
+    display: flex;
+}
+#advancedSearch{
+  width: 21.25vw;
+  background-color: #641B2E;
+  margin: .7vh auto;
+  overflow: hidden;
+  height: 21.25vw;
+}
+#toggleButton {
+  width: 1vw;
+  height: 0.8vw;
+  background-color: #641B2E;
+  margin: 0vh auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  clip-path: polygon(
+    50% 0%,     /* top center */
+    100% 100%,  /* bottom right */
+    50% 75%,    /* inward concave point */
+    0% 100%     /* bottom left */
+  );
+  transform: rotate(180deg); /* makes it point down */
+}
+
+
+#toggleButton.rotated {
+  transform: rotate(0deg); /* Flips the triangle up */
+}
+
+#advancedSearch {
+  transition: max-height 0.6s ease, padding 0.6s ease;
+  overflow: hidden;
+  max-height: 1000px;
+}
+
+#advancedSearch.collapsed {
+  max-height: 4px;
+  padding: 0;
+}
+#mainContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5vh;
+
+  width: calc(100% - 29.68%); /* 100% - 2 * 14.84% */
+  margin-left: 14.84%;
+  margin-right: 14.84%;
+  box-sizing: border-box;
+}
+#outputs{
+  margin-top: 10vh;
+  display: flex; /* Enable Flexbox */
+  align-items: center; /* Align items vertically (optional) */
+  justify-content: center;
+  width: 100%; /* Ensures the container spans the screen */
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.66vw;
+}
+
+.output {
+  width: 16vw;
+  aspect-ratio: 1/1;
+  background-color: #f5d28c;
+  border-radius: 1.04vw;
+  box-shadow: 0 0.21vw 0.52vw rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* stack image on top, text below */
+  align-items: center;
+  justify-content: flex-start; /* align content to top */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.output img {
+  width: 3.33vw;
+  height: 3.33vw;
+  object-fit: contain;
+  image-rendering: crisp-edges;
+  margin-bottom: 0.4vw;
+  margin-top: 0.4vw;
+}
+
+.output p:not(.productName){
+      font-size:.8vw;/* scales up/down */
+      color: #8A2D3B;
+      line-height: 1.3vw;
+        font-weight: bold;
+       margin-top: 0;
+      text-align: center;
+}
+.productName {
+  color: #641B2E;
+  font-size:1vw; /* scales up/down */
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 1vw;
+  word-break: break-word;
+  white-space: normal;
+}
+* {
+  box-sizing: border-box;
+}
+.filterWrapper{
+  color: #FFFFFF;
+  font-size: 1.0417vw;
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+.filterWrapper{
+    margin-left: 1.5vw;
+}
+.filterWrapper p{
+   display: inline;
+    margin-bottom: .1vw;
+    margin-left: .2vw;
+}
+.filterWrapper select{
+  font-size: .7417vw;
+  font-weight: 600;
+  width: 6.708vw;
+  aspect-ratio: 5.6/1;
+  display: block;
+  border-radius: 1vw;
+  appearance: none;        /* Remove default styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #B1B1B1;        /* Optional: remove default background */
+  border: none; 
+  padding-left: 0.5vw;      
+  cursor: pointer;
+  color: #8A2D3B;
+  margin-bottom: 1.2vw;
+}
+#filtersTitle{
+  display: block;
+  color: #B1B1B1;
+  margin:  .5vw auto;
+  margin-right: 1.5vw;
+  text-align: center;
+  color: #B1B1B1;
+  font-weight: bold;
+}
+
+#filterWrapper input[type="range"]{
+  margin-top: .3vw;
+  margin-bottom: 1.2vw;
+  display: block;
+  width: 16.979vw;
+  -webkit-appearance: none; /* Remove default styling */
+  aspect-ratio: 36.2/1;
+  background: #B1B1B1;
+  border-radius: 9999px; /* Makes the track fully rounded */
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 0.9375vw;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background: #FBDB93;
+  cursor: pointer;
+  border: none;
+}
+
+/* Hide the default checkbox */
+.custom-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+/* Style the custom checkbox square */
+.custom-checkbox .checkmark {
+  width: 1.2em;
+  height: 1.2em;
+  background-color: #B1B1B1;
+  border-radius: 0.3em;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+/* Checked state */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+  background-color: #B1B1B1;
+}
+
+/* Optional checkmark (✓) using ::after */
+.custom-checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 0.35em;
+  top: 0.1em;
+  width: 0.25em;
+  height: 0.6em;
+  border: solid #641B2E;
+  border-width: 0 0.2em 0.2em 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+/* Show checkmark only when checked */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  opacity: 1;
+}
