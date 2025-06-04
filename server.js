@@ -15,6 +15,12 @@ const API_ADDRESSES = {
     MAYOR: "https://api.hypixel.net/v2/resources/skyblock/election"
 };
 
+const FILE_PATHS = {
+    AUCTIONS: "JSON/auctions.json",
+    BAZAAR: "JSON/bazaar.json",
+    ALL_PRODUCTS : "JSON/allproducts.json"
+}
+
 
 class Product{
   constructor(name,buy_price,one_hour_instabuys,sell_price,one_hour_instasells){

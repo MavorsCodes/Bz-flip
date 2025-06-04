@@ -1,9 +1,6 @@
 # Ignore JSON folder
 JSON/
 
-# Ignore assets
-ASSETS/
-
 # Ignore node modules
 node_modules/
 
