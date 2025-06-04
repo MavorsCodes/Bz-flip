@@ -21,30 +21,15 @@ const FILE_PATHS = {
     ALL_PRODUCTS : "JSON/allproducts.json"
 }
 
-const IMG_PATHS = { 
-  "RECOMBOBULATOR_3000": "ASSETS/PRODUCTS/recomb.png",
-
-  "GOLD_INGOT" : "ASSETS/PRODUCTS/gold_ingot.png",
-  "ENCHANTED_GOLD" : "ASSETS/PRODUCTS/gold_ingot.png",
-
-  "BOOSTER_COOKIE": "ASSETS/PRODUCTS/cookie.png",
-
-  "ENCHANTMENT_ULTIMATE_WISE_1": "ASSETS/PRODUCTS/enchanted_book.png",
-  "ENCHANTMENT_ULTIMATE_WISE_2": "ASSETS/PRODUCTS/enchanted_book.png",
-  "ENCHANTMENT_ULTIMATE_WISE_3": "ASSETS/PRODUCTS/enchanted_book.png",
-  "ENCHANTMENT_ULTIMATE_WISE_4": "ASSETS/PRODUCTS/enchanted_book.png",
-  "ENCHANTMENT_ULTIMATE_WISE_5": "ASSETS/PRODUCTS/enchanted_book.png",
-
-  "KISMET_FEATHER": "ASSETS/PRODUCTS/feather.png",
-}
-
 class Product{
   constructor(name,buy_price,one_hour_instabuys,sell_price,one_hour_instasells){
     this.name = name;
-    if (IMG_PATHS[name] != null) {
-      this.img = `/images/${path.basename(IMG_PATHS[name])}`;
+    if (name.includes("ENCHANTMENT")) {
+      this.img = `/images/ENCHANTED_BOOK`;
+    } else if (ImgPaths[name] != null) {
+      this.img = `/images/${name}`;
     } else {
-      this.img = `/images/WIP.png`;
+      this.img = `/images/WIP`;
     }
     this.buy_price = buy_price;
     this.one_hour_instabuys = one_hour_instabuys;
@@ -57,26 +42,8 @@ class Product{
     else
       this.coins_per_hour = this.margin * one_hour_instasells;
   }
-  loadImage(imgPath) {
-    try {
-      const data = fs.readFileSync(imgPath);
-      return `data:image/jpeg;base64,${data.toString('base64')}`;
-    } catch (err) {
-      console.error('Error loading image:', err);
-      return null; 
-    }
-  }
-  getPlaceholderImage() {
-    try {
-      const placeholderPath = "ASSETS/PRODUCTS/WIP.png";
-      const data = fs.readFileSync(placeholderPath);
-      return `data:image/jpeg;base64,${data.toString('base64')}`;
-    } catch (err) {
-      console.error('Error loading placeholder image:', err);
-      return null;
-    }
-  }
 }
+
 
 var bzData;//all bz data as json
 var ahData;//all ah data as json
@@ -86,25 +53,31 @@ const updating = true;
 const fetchAllProducts = true;
 const populatedb = false;
 const callDelay = 3 * 1000;
+var ImgPaths;
 var readingBzData = false;//binary semaphore to avoid reading bz data while it is being written
 var cachedResponse = null; // Cache for the homepage response
 var isWritingBazaarJSON = false;
 
-
 const server = http.createServer((req, res) => {
       if (req.url.startsWith('/images/')) {
-      const imgPath = path.join(__dirname, 'ASSETS', 'PRODUCTS', req.url.replace('/images/', ''));
-      fs.readFile(imgPath, (err, data) => {
+        const imageKey = req.url.replace('/images/', '');
+        req.url.replace('/images/', '')
+        const imgPath = 'ASSETS/PRODUCTS/'+imageKey+".png";
+        if (!imgPath) {
+        res.writeHead(404);
+        return res.end();
+        }
+        fs.readFile(imgPath, (err, data) => {
         if (err) {
           res.writeHead(404);
           return res.end();
         }
         res.writeHead(200, { 'Content-Type': 'image/png' });
         res.end(data);
-      });
-      return;
-    }
-    else if(req.url.startsWith('/mayors/')) {
+        });
+        return;
+      }
+      else if(req.url.startsWith('/mayors/')) {
       const imgPath = path.join(__dirname, 'ASSETS', 'MAYORS', req.url.replace('/mayors/', ''));
       fs.readFile(imgPath, (err, data) => {
         if (err) {
@@ -231,6 +204,9 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, async () => {
   console.log(`Server running at http://localhost:${port}/`);
+  const filePath = path.join(__dirname, "/IMGTOOLS/joined.json");
+  ImgPaths = await fileToJson(filePath);
+
   await getMayor();
   await loadInitialData();
   if(updating) startPeriodicTasks();
@@ -379,6 +355,7 @@ function jsonToFile(filepath,data){
 async function fileToJson(filepath) {
   try {
     const data = await fs.promises.readFile(filepath, 'utf8');
+    if(!data) console.error("No data in",filepath);
     return JSON.parse(data);
   } catch (err) {
     console.error(`Error reading or parsing JSON file at ${filepath}:`, err);
@@ -409,7 +386,7 @@ function writeallBzToDb(){
 }
 
 function returnProductHtml(product){//profit and margin are the same thing i'm just very very dumb
-    return `<img src="${product.img}" alt="img of ${product.name}">
+    return `<img  loading="lazy" src="${product.img}" alt="img of ${product.name}">
           <p class="productName">${product.name.toLowerCase().replace(/_/g, ' ').replace(/enchantment/gi, '')}</p>
           <p>Buy Price: ${product.buy_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
           One-Hour Instabuys: ${product.one_hour_instabuys.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}<br>
