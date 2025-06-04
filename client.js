@@ -210,14 +210,6 @@ function updateSearchParams() {
         console.error('Error fetching name:', error);
       });
 
-    function toggleAdvancedSearch() {
-        const advancedSearch = document.getElementById('advancedSearch');
-        const button = document.getElementById('toggleButton');
-        
-        advancedSearch.classList.toggle('collapsed');
-        button.classList.toggle('rotated');
-    }
-
   });
 
   function formatNumber(value) {
@@ -265,3 +257,11 @@ function validateTextInput(textEl, rangeEl) {
 
   return clamped;
 }
+
+    function toggleAdvancedSearch() {
+        const advancedSearch = document.getElementById('advancedSearch');
+        const button = document.getElementById('toggleButton');
+        
+        advancedSearch.classList.toggle('collapsed');
+        button.classList.toggle('rotated');
+    }
