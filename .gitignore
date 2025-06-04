@@ -1,2 +1,11 @@
+# Ignore JSON files
+JSON/
+
+# Ignore assets
+ASSETS/
+
 # Ignore node modules
 node_modules/
+
+# Ignore build files
+*.json
