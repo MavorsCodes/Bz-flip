@@ -4,9 +4,8 @@
   "description": "a price tracker for ah and bz on hypixel skyblock",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "generateImgs": "node ./IMGTOOLS/getAllUpdatedImgs.js"
+    "genImgs": "node ./IMGTOOLS/getAllUpdatedImgs.js"
   },
   "author": "mavors",
   "license": "MIT",
@@ -14,6 +13,7 @@
     "follow-redirects": "^1.15.9",
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0",
-    "p-limit": "^6.2.0"
+    "p-limit": "^6.2.0",
+    "plotly.js": "^3.0.1"
   }
 }

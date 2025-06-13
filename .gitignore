@@ -1,10 +1,6 @@
 # Ignore JSON folder
 JSON/
-
+# Ignore assets
+ASSETS/
 # Ignore node modules
 node_modules/
-
-# Ignore build files
-*.JSON
-JSON/auctions.json
-JSON/bazaar.json

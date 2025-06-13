@@ -49,7 +49,6 @@
     <div id="outputs">
     </div>
   </div>
-
 <div id="leftSidebar" class="sidebar">
     <div id="icon"><img src="/icons/Icon.webp">
     <div id="title">    
@@ -58,12 +57,12 @@
     </div>
   </div>
     <nav class="navs">
-      <a  class="navCard" href="/realhomepage/">Home</a>
-      <a  class="navCard" href="/flipping/">Flipping</a>
-      <a  class="navCard" href="/crafting/">Crafting</a>
-      <a  class="navCard" href="/forging/">Forging</a>
-      <a  class="navCard" href="/npc/">Npc</a>
-      <a  class="navCard" href="/reversenpc/">Reverse Npc</a>
+      <p  class="navCard"  onclick="getNavData('/homepage')">Home</p>
+      <p  class="navCard" onclick="getNavData('/flipping')">Flipping</p>
+      <p  class="navCard" onclick="getNavData('/crafting')">Crafting</p>
+      <p  class="navCard" onclick="getNavData('/forging')">Forging</p>
+      <p  class="navCard" onclick="getNavData('/npc')">Npc</p>
+      <p  class="navCard" onclick="getNavData('/reversenpc')">Reverse Npc</p>
     </nav>
 </div>
 <div id="rightSidebar" class="sidebar">
@@ -74,7 +73,7 @@
     <p id="mayorName"></p>
     <footer>
       <p class="credits">made by Mavors</p>
-      <a class="credits" href="https://github.com/MavorsCodes/Bz-flip">github</a>
+      <a class="credits" href="https://github.com/MavorsCodes/Bz-flip" target="_blank">github</a>
     </footer>
 </div>
   <script src="client.js"></script>

@@ -60,7 +60,6 @@ body{
 .searchIcon {
   border-left: 2px solid #D3B778;
   width: 1.5vw;
-  aspect-ratio: 1/1;
   margin-right: 0.4vw;
   display: flex;
   align-items: center;
@@ -186,6 +185,7 @@ body{
   justify-content: flex-start; /* align content to top */
   box-sizing: border-box;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .output img {
@@ -367,6 +367,7 @@ input[type="range"]::-webkit-slider-thumb {
   color: #FFFFFF;
   font-weight: bold;
   font-size: 1.8vw;
+  margin: 0;
 }
 .navCard:hover{
   background-color: #cf475c;
@@ -381,4 +382,23 @@ footer {
   bottom: 1vw;
   width: 100%;
   text-align: center;
+}
+a.homeButton{
+  background-color: #641B2E;
+  text-decoration: none;
+  color: #000000;
+  padding:1vw;
+  margin:1vw auto;
+  width: 10vw;
+  text-align: center;
+}
+
+a.homeButton:hover{
+  background-color: #330d17;
+}
+.dataImg{
+  aspect-ratio: 1/1;
+  width: 5vw;
+  image-rendering: crisp-edges;
+  margin-bottom: 1vw;
 }

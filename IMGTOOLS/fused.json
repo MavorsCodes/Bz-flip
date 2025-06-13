@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "FISHING_ROD",
+    "material": "FISHING_ROD",
+    "image": "https://minecraft-api.vercel.app/images/items/fishing_rod.png"
+  },
+  {
+    "id": "FERMENTED_SPIDER_EYE",
+    "material": "FERMENTED_SPIDER_EYE",
+    "image": "https://minecraft-api.vercel.app/images/items/fermented_spider_eye.png"
+  },
+  {
+    "id": "NETHERRACK",
+    "material": "NETHERRACK",
+    "image": "https://minecraft-api.vercel.app/images/items/netherrack.png"
+  },
+  {
+    "id": "BOW",
+    "material": "BOW",
+    "image": "https://minecraft-api.vercel.app/images/items/bow.png"
+  },
+  {
+    "id": "OBSIDIAN",
+    "material": "OBSIDIAN",
+    "image": "https://minecraft-api.vercel.app/images/items/obsidian.png"
+  },
+  {
+    "id": "CAULDRON",
+    "material": "SKULL_ITEM",
+    "skin": {
+      "value": "ewogICJ0aW1lc3RhbXAiIDogMTY0NDc2NjY1MzkxNSwKICAicHJvZmlsZUlkIiA6ICI0NmY3N2NjNmQ2MjU0NjEzYjc2NmYyZDRmMDM2MzZhNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJNaXNzV29sZiIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS82MDFkOTdmZjc3MzFiZGUwZTAyNTMyODZiOGMyOTM2ZmQ3ZTYzM2YxMzc5MzFhNGJmNDFlNTFlM2Y4YzdkODRlIgogICAgfQogIH0KfQ==",
+      "signature": "I3cZKzYDJ851ryyiDncXGGjjqq0hoUo5dW/2CYlOtNuPB3EDKm6Q3YNgIGsYxbR5YCAzX6tTMuBPBi1TQXH4Ze81aSTNXgUb9W8z0XES/7H4+G26cibITYdXxanJFy3pVnQsRD5bAUWLQQ2Xv25vmPrPjLXd/WV5EcOGse4oGsT09iH7o76byD4eFRBIZl5S0rDZeByGLIY62oYiGiQjSmHyhmgKf/tu3UBatI8oWeh7dmRy2IwYYuPBOFBUNE38UwRQWAeC6QE4WYs+Pr/Mn8mG4//UX8Af9KxpwrLO44YO+MsUZr26CkYMKECGz7+k2h/9pNk32aQFYBD8ilCkxpqVqn7Gk5uSAqjzJ8afb8yCjYHZuxitWrNuankyueSSG3pkMarjuRZnVCaVVrYvYyLPhSIqzLVbcwVPo+wqOdRr1TTyT4uSbheoD5b/oupNhBfnRn8ZDHif2Tf4eYtgIyR/WVyERneq6d5PGBktXNEb83djmzV83UrOcCbRN7SE0vxAAyPXnoMxe7G7EKiiXvYywJIz/bPMacHxIfQNe4W29Cl8oCEJDAJCMqRudqZM+P6jBGmnpIY1HX/pdBv7HFAv8DC0lQbuIAQXX1+6mN2JAvoTQ2O6O1RjJUg55LcQC0xt4LuZ3npl7i4OG/oyf4VO2XcRHV4zj1ttfgrW9nU="
+    },
+    "image": "https://minecraft-api.vercel.app/images/items/cauldron.png"
+  },
+  {
+    "id": "COAL_BLOCK",
+    "material": "COAL_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/coal_block.png"
+  },
+  {
+    "id": "HOPPER_MINECART",
+    "material": "HOPPER_MINECART",
+    "image": "https://minecraft-api.vercel.app/images/items/hopper_minecart.png"
+  },
+  {
+    "id": "RABBIT_HIDE",
+    "material": "RABBIT_HIDE",
+    "image": "https://minecraft-api.vercel.app/images/items/rabbit_hide.png"
+  },
+  {
+    "id": "TORCH",
+    "material": "TORCH",
+    "image": "https://minecraft-api.vercel.app/images/items/torch.png"
+  },
+  {
+    "id": "NETHERITE_HELMET",
+    "material": "CHAINMAIL_HELMET",
+    "image": "https://minecraft-api.vercel.app/images/items/netherite_helmet.png"
+  },
+  {
+    "id": "BIRCH_FENCE",
+    "material": "BIRCH_FENCE",
+    "image": "https://minecraft-api.vercel.app/images/items/birch_fence.png"
+  },
+  {
+    "id": "SPRUCE_FENCE_GATE",
+    "material": "SPRUCE_FENCE_GATE",
+    "image": "https://minecraft-api.vercel.app/images/items/spruce_fence_gate.png"
+  },
+  {
+    "id": "GLASS",
+    "material": "GLASS",
+    "image": "https://minecraft-api.vercel.app/images/items/glass.png"
+  },
+  {
+    "id": "NETHER_BRICK",
+    "material": "NETHER_BRICK",
+    "image": "https://minecraft-api.vercel.app/images/items/nether_brick.png"
+  },
+  {
+    "id": "STONE",
+    "material": "STONE",
+    "image": "https://minecraft-api.vercel.app/images/items/stone.png"
+  },
+  {
+    "id": "GOLD_BLOCK",
+    "material": "GOLD_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/gold_block.png"
+  },
+  {
+    "id": "MELON",
+    "material": "MELON",
+    "image": "https://minecraft-api.vercel.app/images/items/melon.png"
+  },
+  {
+    "id": "BREAD",
+    "material": "BREAD",
+    "image": "https://minecraft-api.vercel.app/images/items/bread.png"
+  },
+  {
+    "id": "GOLD_INGOT",
+    "material": "GOLD_INGOT",
+    "image": "https://minecraft-api.vercel.app/images/items/gold_ingot.png"
+  },
+  {
+    "id": "GRAVEL",
+    "material": "GRAVEL",
+    "image": "https://minecraft-api.vercel.app/images/items/gravel.png"
+  },
+  {
+    "id": "NAME_TAG",
+    "material": "NAME_TAG",
+    "image": "https://minecraft-api.vercel.app/images/items/name_tag.png"
+  },
+  {
+    "id": "ACTIVATOR_RAIL",
+    "material": "ACTIVATOR_RAIL",
+    "image": "https://minecraft-api.vercel.app/images/items/activator_rail.png"
+  },
+  {
+    "id": "PUMPKIN_SEEDS",
+    "material": "PUMPKIN_SEEDS",
+    "image": "https://minecraft-api.vercel.app/images/items/pumpkin_seeds.png"
+  },
+  {
+    "id": "ANVIL",
+    "material": "ANVIL",
+    "image": "https://minecraft-api.vercel.app/images/items/anvil.png"
+  },
+  {
+    "id": "PUMPKIN",
+    "material": "PUMPKIN",
+    "image": "https://minecraft-api.vercel.app/images/items/pumpkin.png"
+  },
+  {
+    "id": "NETHER_BRICK_STAIRS",
+    "material": "NETHER_BRICK_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/nether_brick_stairs.png"
+  },
+  {
+    "id": "ENDER_CHEST",
+    "material": "ENDER_CHEST",
+    "image": "https://minecraft-api.vercel.app/images/items/ender_chest.png"
+  },
+  {
+    "id": "EGG",
+    "material": "EGG",
+    "image": "https://minecraft-api.vercel.app/images/items/egg.png"
+  },
+  {
+    "id": "SAND",
+    "material": "SAND",
+    "image": "https://minecraft-api.vercel.app/images/items/sand.png"
+  },
+  {
+    "id": "ENDER_PEARL",
+    "material": "ENDER_PEARL",
+    "image": "https://minecraft-api.vercel.app/images/items/ender_pearl.png"
+  },
+  {
+    "id": "DARK_OAK_FENCE",
+    "material": "DARK_OAK_FENCE",
+    "image": "https://minecraft-api.vercel.app/images/items/dark_oak_fence.png"
+  },
+  {
+    "id": "CACTUS",
+    "material": "CACTUS",
+    "image": "https://minecraft-api.vercel.app/images/items/cactus.png"
+  },
+  {
+    "id": "WOOD_SWORD",
+    "material": "WOOD_SWORD",
+    "image": "https://minecraft-api.vercel.app/images/items/wooden_sword.png"
+  },
+  {
+    "id": "SPRUCE_FENCE",
+    "material": "SPRUCE_FENCE",
+    "image": "https://minecraft-api.vercel.app/images/items/spruce_fence.png"
+  },
+  {
+    "id": "FEATHER",
+    "material": "FEATHER",
+    "image": "https://minecraft-api.vercel.app/images/items/feather.png"
+  },
+  {
+    "id": "COOKED_MUTTON",
+    "material": "COOKED_MUTTON",
+    "image": "https://minecraft-api.vercel.app/images/items/cooked_mutton.png"
+  },
+  {
+    "id": "CHAINMAIL_HELMET",
+    "material": "CHAINMAIL_HELMET",
+    "image": "https://minecraft-api.vercel.app/images/items/chainmail_helmet.png"
+  },
+  {
+    "id": "WATER_BUCKET",
+    "material": "WATER_BUCKET",
+    "image": "https://minecraft-api.vercel.app/images/items/water_bucket.png"
+  },
+  {
+    "id": "STICK",
+    "material": "STICK",
+    "image": "https://minecraft-api.vercel.app/images/items/stick.png"
+  },
+  {
+    "id": "MINECART",
+    "material": "MINECART",
+    "image": "https://minecraft-api.vercel.app/images/items/minecart.png"
+  },
+  {
+    "id": "BROWN_MUSHROOM",
+    "material": "BROWN_MUSHROOM",
+    "image": "https://minecraft-api.vercel.app/images/items/brown_mushroom.png"
+  },
+  {
+    "id": "CHAINMAIL_BOOTS",
+    "material": "CHAINMAIL_BOOTS",
+    "image": "https://minecraft-api.vercel.app/images/items/chainmail_boots.png"
+  },
+  {
+    "id": "IRON_HELMET",
+    "material": "IRON_HELMET",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_helmet.png"
+  },
+  {
+    "id": "GOLDEN_APPLE",
+    "material": "GOLDEN_APPLE",
+    "image": "https://minecraft-api.vercel.app/images/items/golden_apple.png"
+  },
+  {
+    "id": "BONE",
+    "material": "BONE",
+    "image": "https://minecraft-api.vercel.app/images/items/bone.png"
+  },
+  {
+    "id": "CAKE",
+    "material": "CAKE",
+    "image": "https://minecraft-api.vercel.app/images/items/cake.png"
+  },
+  {
+    "id": "POISONOUS_POTATO",
+    "material": "POISONOUS_POTATO",
+    "image": "https://minecraft-api.vercel.app/images/items/poisonous_potato.png"
+  },
+  {
+    "id": "SHEARS",
+    "material": "SHEARS",
+    "image": "https://minecraft-api.vercel.app/images/items/shears.png"
+  },
+  {
+    "id": "BOOK",
+    "material": "BOOK",
+    "image": "https://minecraft-api.vercel.app/images/items/book.png"
+  },
+  {
+    "id": "PUMPKIN_PIE",
+    "material": "PUMPKIN_PIE",
+    "image": "https://minecraft-api.vercel.app/images/items/pumpkin_pie.png"
+  },
+  {
+    "id": "RABBIT_FOOT",
+    "material": "RABBIT_FOOT",
+    "image": "https://minecraft-api.vercel.app/images/items/rabbit_foot.png"
+  },
+  {
+    "id": "ACACIA_FENCE",
+    "material": "ACACIA_FENCE",
+    "image": "https://minecraft-api.vercel.app/images/items/acacia_fence.png"
+  },
+  {
+    "id": "COBBLESTONE_STAIRS",
+    "material": "COBBLESTONE_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/cobblestone_stairs.png"
+  },
+  {
+    "id": "COMPASS",
+    "material": "COMPASS",
+    "image": "https://minecraft-api.vercel.app/images/items/compass.gif"
+  },
+  {
+    "id": "IRON_LEGGINGS",
+    "material": "IRON_LEGGINGS",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_leggings.png"
+  },
+  {
+    "id": "SPIDER_EYE",
+    "material": "SPIDER_EYE",
+    "image": "https://minecraft-api.vercel.app/images/items/spider_eye.png"
+  },
+  {
+    "id": "IRON_AXE",
+    "material": "IRON_AXE",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_axe.png"
+  },
+  {
+    "id": "GOLD_ORE",
+    "material": "GOLD_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/gold_ore.png"
+  },
+  {
+    "id": "GRASS",
+    "material": "GRASS",
+    "image": "https://minecraft-api.vercel.app/images/items/grass.png"
+  },
+  {
+    "id": "WOOD_PICKAXE",
+    "material": "WOOD_PICKAXE",
+    "image": "https://minecraft-api.vercel.app/images/items/wooden_pickaxe.png"
+  },
+  {
+    "id": "PRISMARINE_CRYSTALS",
+    "material": "PRISMARINE_CRYSTALS",
+    "image": "https://minecraft-api.vercel.app/images/items/prismarine_crystals.png"
+  },
+  {
+    "id": "SPONGE",
+    "material": "SPONGE",
+    "image": "https://minecraft-api.vercel.app/images/items/sponge.png"
+  },
+  {
+    "id": "CHAINMAIL_LEGGINGS",
+    "material": "CHAINMAIL_LEGGINGS",
+    "image": "https://minecraft-api.vercel.app/images/items/chainmail_leggings.png"
+  },
+  {
+    "id": "STONE_BUTTON",
+    "material": "STONE_BUTTON",
+    "image": "https://minecraft-api.vercel.app/images/items/stone_button.png"
+  },
+  {
+    "id": "BAKED_POTATO",
+    "material": "BAKED_POTATO",
+    "image": "https://minecraft-api.vercel.app/images/items/baked_potato.png"
+  },
+  {
+    "id": "COAL_ORE",
+    "material": "COAL_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/coal_ore.png"
+  },
+  {
+    "id": "COOKIE",
+    "material": "COOKIE",
+    "image": "https://minecraft-api.vercel.app/images/items/cookie.png"
+  },
+  {
+    "id": "LADDER",
+    "material": "LADDER",
+    "image": "https://minecraft-api.vercel.app/images/items/ladder.png"
+  },
+  {
+    "id": "JACK_O_LANTERN",
+    "material": "JACK_O_LANTERN",
+    "image": "https://minecraft-api.vercel.app/images/items/jack_o_lantern.png"
+  },
+  {
+    "id": "CHAINMAIL_CHESTPLATE",
+    "material": "CHAINMAIL_CHESTPLATE",
+    "image": "https://minecraft-api.vercel.app/images/items/chainmail_chestplate.png"
+  },
+  {
+    "id": "DAYLIGHT_DETECTOR",
+    "material": "DAYLIGHT_DETECTOR",
+    "image": "https://minecraft-api.vercel.app/images/items/daylight_detector.png"
+  },
+  {
+    "id": "LAPIS_ORE",
+    "material": "LAPIS_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/lapis_ore.png"
+  },
+  {
+    "id": "SNOW_BLOCK",
+    "material": "SNOW_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/snow_block.png"
+  },
+  {
+    "id": "SUGAR",
+    "material": "SUGAR",
+    "image": "https://minecraft-api.vercel.app/images/items/sugar.png"
+  },
+  {
+    "id": "VINE",
+    "material": "VINE",
+    "image": "https://minecraft-api.vercel.app/images/items/vine.png"
+  },
+  {
+    "id": "DIAMOND",
+    "material": "DIAMOND",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond.png"
+  },
+  {
+    "id": "LEATHER",
+    "material": "LEATHER",
+    "image": "https://minecraft-api.vercel.app/images/items/leather.png"
+  },
+  {
+    "id": "SUSPICIOUS_STEW",
+    "material": "SKULL_ITEM",
+    "skin": {
+      "value": "ewogICJ0aW1lc3RhbXAiIDogMTcyMDA0NDAzOTY3OSwKICAicHJvZmlsZUlkIiA6ICI0NTM1Y2RjNjk3NGU0Nzk4YjljYzY4ODlkZWY1MDk2NiIsCiAgInByb2ZpbGVOYW1lIiA6ICIzZXlyZW4iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWE2YzE5YzQ1YTQwMjZkMzM1MThjNTJmZWY3N2I0OTg1YjhhMmUzNjM3Yzc0NTQzYjJhZjY5MTAwODEzNDVlNCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9",
+      "signature": "oP0snC2HrW8C6GdLwNOf06f4OKC1xCpC+RhLnZD+yikk5Z84lvmOGXKWb7m7T811SNshR4t7Vm2VHWGKDIjCStfSTk+oH+orOhuaoj6vzvC/LOf1g7uwNfAMt2fX2jq6f26/QyGoudNsSwjkriYF5vXhQePGGYQ4hTyLpsMLuZz1U+RLEInsAWUeXlhrsj5Zl5LbaQfbmJ4tYAzpijwQws3qKVvNzsMoJK7oAbI0JZguWsMfULlOJ4IRakEgmfusZ/DJmDQ+y0TZzpeSUARikn/nlxq6hR9xH5p3H+Eupv1jIiFX9Jwjgfcd8tEC1tT2atqnm1E/zFjbbDVxjyvKYvLpDSym0485oyWhUVrVTt8Pk8dZ80Aem0ciYvKSvc4rkWSa1Clk/Qy8aw8KdlLIM5IgyonGbgNmk3CRatd0zoE6RVhHspJ47cJtS2G8rbZqehtalmFlQ587YoHV6coI6xNh1kCp6lYGAvYoEP6etwdwCs4/FFNZVwuWfYPDo7dUzuGK2dC9qnfErxeSn/TmynVxjZLRGB+nAJTeDWT7bne/wX4+jhcJOP1td1O3T4dCYwlz+fE0DU8iryUktDfH17J/YF/djwup8qPBAnH8L2TKPTe0WhDAjBCYb/53JbiY5EY0BwasK0dzw/ddJpB9ReCz4I/SvMG3VaLvqEFVDw0="
+    },
+    "image": "https://minecraft-api.vercel.app/images/items/suspicious_stew.png"
+  },
+  {
+    "id": "CAMPFIRE",
+    "material": "SKULL_ITEM",
+    "skin": {
+      "value": "ewogICJ0aW1lc3RhbXAiIDogMTY0NDc2NjI0NTM0MSwKICAicHJvZmlsZUlkIiA6ICJmZTYxY2RiMjUyMTA0ODYzYTljY2E2ODAwZDRiMzgzZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJNeVNoYWRvd3MiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2YxM2RmNjI2Y2ZhZmZkYzM2NDU4MzcyYmFiNTdhMjYzYzAwYjA3NzJiYWMyNmM1MTc0Y2YzNzViOGQ0NDc2MSIKICAgIH0KICB9Cn0=",
+      "signature": "N//bQU+yGTske+pKeAIgTEWU/w9ofZLEZy72mh3i8Yzo76UNjZ12q1uPBBmUnc/dBE1FcO+zoA27N71tCu9dFAMGzOaScAi1IMjOhQXagURqFFqgpUjXUGSeQqWYW/ROZUsngtT18xt9S/htT/QnOD7gDuhko9Eckccv43zKZC1Y9rq3itl+mjzd+F5b7OMLageHGg+CQnTHosCKt1qPXtC3nlFFu7Cmjozy8DRlJ5lT6BWDf/cQvwVZ9P42HjGFGFc+qBKRDOXUfONuQfdtDFRfFRbesepYxUcYcpJDRSov+zVzzbZTjNXboAD8E+C8j+P82kqza98MA9AL3TCxyVMLI8AllNWJ8Xd409UvgWwz0CM5i/07049w7a/Zot8Z6Ejmu5DiqW4HjeJvIvz2DJ7e9Hl6aj6i99IB/WHxb4iDMSGNa2q2VNSajo1dCApvrPCoGfJ6AJOO0kfrMnEh1PktcHedf2fuiyH2mljYQnaUTaVC5Q7NeS4s2HH26+uJhifAWIZHIRgIRlLycrcfzcx7778ZABF4diIs1xTfm/8CxkkKnXfmqzVlfdX/lpljiMz3RVh6CxSD4t+uIIEumvtnyvHTQciqFiSnxmD6QR3kfvfaZ5hHsZKINJ/NDBJ/x05V+LOa1ex9sZnmJNOOFU6c2qqX1S1ADXNnYDzU6jY="
+    },
+    "image": "https://minecraft-api.vercel.app/images/items/campfire.png"
+  },
+  {
+    "id": "STONE_AXE",
+    "material": "STONE_AXE",
+    "image": "https://minecraft-api.vercel.app/images/items/stone_axe.png"
+  },
+  {
+    "id": "COBBLESTONE",
+    "material": "COBBLESTONE",
+    "image": "https://minecraft-api.vercel.app/images/items/cobblestone.png"
+  },
+  {
+    "id": "SLIME_BLOCK",
+    "material": "SLIME_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/slime_block.png"
+  },
+  {
+    "id": "BRICK_STAIRS",
+    "material": "BRICK_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/brick_stairs.png"
+  },
+  {
+    "id": "FIREWORK_ROCKET",
+    "material": "FIREWORK",
+    "image": "https://minecraft-api.vercel.app/images/items/firework_rocket.png"
+  },
+  {
+    "id": "JUKEBOX",
+    "material": "JUKEBOX",
+    "image": "https://minecraft-api.vercel.app/images/items/jukebox.png"
+  },
+  {
+    "id": "DIAMOND_ORE",
+    "material": "DIAMOND_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_ore.png"
+  },
+  {
+    "id": "IRON_HOE",
+    "material": "IRON_HOE",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_hoe.png"
+  },
+  {
+    "id": "STORAGE_MINECART",
+    "material": "STORAGE_MINECART",
+    "image": "https://minecraft-api.vercel.app/images/items/chest_minecart.png"
+  },
+  {
+    "id": "IRON_PICKAXE",
+    "material": "IRON_PICKAXE",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_pickaxe.png"
+  },
+  {
+    "id": "PRISMARINE_SHARD",
+    "material": "PRISMARINE_SHARD",
+    "image": "https://minecraft-api.vercel.app/images/items/prismarine_shard.png"
+  },
+  {
+    "id": "STRING",
+    "material": "STRING",
+    "image": "https://minecraft-api.vercel.app/images/items/string.png"
+  },
+  {
+    "id": "POWERED_RAIL",
+    "material": "POWERED_RAIL",
+    "image": "https://minecraft-api.vercel.app/images/items/powered_rail.png"
+  },
+  {
+    "id": "NOTE_BLOCK",
+    "material": "NOTE_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/note_block.png"
+  },
+  {
+    "id": "IRON_TRAPDOOR",
+    "material": "IRON_TRAPDOOR",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_trapdoor.png"
+  },
+  {
+    "id": "CLAY",
+    "material": "CLAY",
+    "image": "https://minecraft-api.vercel.app/images/items/clay.png"
+  },
+  {
+    "id": "REDSTONE_BLOCK",
+    "material": "REDSTONE_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/redstone_block.png"
+  },
+  {
+    "id": "MILK_BUCKET",
+    "material": "MILK_BUCKET",
+    "image": "https://minecraft-api.vercel.app/images/items/milk_bucket.png"
+  },
+  {
+    "id": "STONE_HOE",
+    "material": "STONE_HOE",
+    "image": "https://minecraft-api.vercel.app/images/items/stone_hoe.png"
+  },
+  {
+    "id": "FURNACE",
+    "material": "FURNACE",
+    "image": "https://minecraft-api.vercel.app/images/items/furnace.png"
+  },
+  {
+    "id": "DIRT",
+    "material": "DIRT",
+    "image": "https://minecraft-api.vercel.app/images/items/dirt.png"
+  },
+  {
+    "id": "IRON_BOOTS",
+    "material": "IRON_BOOTS",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_boots.png"
+  },
+  {
+    "id": "RABBIT",
+    "material": "RABBIT",
+    "image": "https://minecraft-api.vercel.app/images/items/rabbit.png"
+  },
+  {
+    "id": "DIAMOND_SWORD",
+    "material": "DIAMOND_SWORD",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_sword.png"
+  },
+  {
+    "id": "EMERALD_BLOCK",
+    "material": "EMERALD_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/emerald_block.png"
+  },
+  {
+    "id": "MELON_SEEDS",
+    "material": "MELON_SEEDS",
+    "image": "https://minecraft-api.vercel.app/images/items/melon_seeds.png"
+  },
+  {
+    "id": "TRAPPED_CHEST",
+    "material": "TRAPPED_CHEST",
+    "image": "https://minecraft-api.vercel.app/images/items/trapped_chest.png"
+  },
+  {
+    "id": "BUCKET",
+    "material": "BUCKET",
+    "image": "https://minecraft-api.vercel.app/images/items/bucket.png"
+  },
+  {
+    "id": "ENCHANTED_BOOK",
+    "material": "ENCHANTED_BOOK",
+    "image": "https://minecraft-api.vercel.app/images/items/enchanted_book.gif"
+  },
+  {
+    "id": "TNT",
+    "material": "TNT",
+    "image": "https://minecraft-api.vercel.app/images/items/tnt.png"
+  },
+  {
+    "id": "REDSTONE",
+    "material": "REDSTONE",
+    "image": "https://minecraft-api.vercel.app/images/items/redstone.png"
+  },
+  {
+    "id": "LAVA_BUCKET",
+    "material": "LAVA_BUCKET",
+    "image": "https://minecraft-api.vercel.app/images/items/lava_bucket.png"
+  },
+  {
+    "id": "HAY_BLOCK",
+    "material": "HAY_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/hay_block.png"
+  },
+  {
+    "id": "IRON_SWORD",
+    "material": "IRON_SWORD",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_sword.png"
+  },
+  {
+    "id": "DIAMOND_HELMET",
+    "material": "DIAMOND_HELMET",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_helmet.png"
+  },
+  {
+    "id": "BOOKSHELF",
+    "material": "BOOKSHELF",
+    "image": "https://minecraft-api.vercel.app/images/items/bookshelf.png"
+  },
+  {
+    "id": "DEAD_BUSH",
+    "material": "DEAD_BUSH",
+    "image": "https://minecraft-api.vercel.app/images/items/dead_bush.png"
+  },
+  {
+    "id": "RABBIT_STEW",
+    "material": "RABBIT_STEW",
+    "image": "https://minecraft-api.vercel.app/images/items/rabbit_stew.png"
+  },
+  {
+    "id": "LEATHER_CHESTPLATE",
+    "material": "LEATHER_CHESTPLATE",
+    "image": "https://minecraft-api.vercel.app/images/items/leather_chestplate.png"
+  },
+  {
+    "id": "WOOD_HOE",
+    "material": "WOOD_HOE",
+    "image": "https://minecraft-api.vercel.app/images/items/wooden_hoe.png"
+  },
+  {
+    "id": "STONE_SWORD",
+    "material": "STONE_SWORD",
+    "image": "https://minecraft-api.vercel.app/images/items/stone_sword.png"
+  },
+  {
+    "id": "BONE_MEAL",
+    "material": "INK_SACK",
+    "image": "https://minecraft-api.vercel.app/images/items/bone_meal.png"
+  },
+  {
+    "id": "IRON_CHESTPLATE",
+    "material": "IRON_CHESTPLATE",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_chestplate.png"
+  },
+  {
+    "id": "DIAMOND_BOOTS",
+    "material": "DIAMOND_BOOTS",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_boots.png"
+  },
+  {
+    "id": "RED_SANDSTONE",
+    "material": "RED_SANDSTONE",
+    "image": "https://minecraft-api.vercel.app/images/items/red_sandstone.png"
+  },
+  {
+    "id": "PAINTING",
+    "material": "PAINTING",
+    "image": "https://minecraft-api.vercel.app/images/items/painting.png"
+  },
+  {
+    "id": "DIAMOND_LEGGINGS",
+    "material": "DIAMOND_LEGGINGS",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_leggings.png"
+  },
+  {
+    "id": "IRON_INGOT",
+    "material": "IRON_INGOT",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_ingot.png"
+  },
+  {
+    "id": "LEATHER_HELMET",
+    "material": "LEATHER_HELMET",
+    "image": "https://minecraft-api.vercel.app/images/items/leather_helmet.png"
+  },
+  {
+    "id": "HOPPER",
+    "material": "HOPPER",
+    "image": "https://minecraft-api.vercel.app/images/items/hopper.png"
+  },
+  {
+    "id": "WHEAT",
+    "material": "WHEAT",
+    "image": "https://minecraft-api.vercel.app/images/items/wheat.png"
+  },
+  {
+    "id": "PACKED_ICE",
+    "material": "PACKED_ICE",
+    "image": "https://minecraft-api.vercel.app/images/items/packed_ice.png"
+  },
+  {
+    "id": "GLOWSTONE",
+    "material": "GLOWSTONE",
+    "image": "https://minecraft-api.vercel.app/images/items/glowstone.png"
+  },
+  {
+    "id": "BOWL",
+    "material": "BOWL",
+    "image": "https://minecraft-api.vercel.app/images/items/bowl.png"
+  },
+  {
+    "id": "STONE_PICKAXE",
+    "material": "STONE_PICKAXE",
+    "image": "https://minecraft-api.vercel.app/images/items/stone_pickaxe.png"
+  },
+  {
+    "id": "ITEM_FRAME",
+    "material": "ITEM_FRAME",
+    "image": "https://minecraft-api.vercel.app/images/items/item_frame.png"
+  },
+  {
+    "id": "GOLD_NUGGET",
+    "material": "GOLD_NUGGET",
+    "image": "https://minecraft-api.vercel.app/images/items/gold_nugget.png"
+  },
+  {
+    "id": "CHEST",
+    "material": "CHEST",
+    "image": "https://minecraft-api.vercel.app/images/items/chest.png"
+  },
+  {
+    "id": "IRON_BLOCK",
+    "material": "IRON_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_block.png"
+  },
+  {
+    "id": "JUNGLE_FENCE_GATE",
+    "material": "JUNGLE_FENCE_GATE",
+    "image": "https://minecraft-api.vercel.app/images/items/jungle_fence_gate.png"
+  },
+  {
+    "id": "SUGAR_CANE",
+    "material": "SUGAR_CANE",
+    "image": "https://minecraft-api.vercel.app/images/items/sugar_cane.png"
+  },
+  {
+    "id": "SLIME_BALL",
+    "material": "SLIME_BALL",
+    "image": "https://minecraft-api.vercel.app/images/items/slime_ball.png"
+  },
+  {
+    "id": "COOKED_CHICKEN",
+    "material": "COOKED_CHICKEN",
+    "image": "https://minecraft-api.vercel.app/images/items/cooked_chicken.png"
+  },
+  {
+    "id": "DROPPER",
+    "material": "DROPPER",
+    "image": "https://minecraft-api.vercel.app/images/items/dropper.png"
+  },
+  {
+    "id": "ACACIA_STAIRS",
+    "material": "ACACIA_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/acacia_stairs.png"
+  },
+  {
+    "id": "COOKED_RABBIT",
+    "material": "COOKED_RABBIT",
+    "image": "https://minecraft-api.vercel.app/images/items/cooked_rabbit.png"
+  },
+  {
+    "id": "NETHER_STAR",
+    "material": "NETHER_STAR",
+    "image": "https://minecraft-api.vercel.app/images/items/nether_star.gif"
+  },
+  {
+    "id": "DIAMOND_PICKAXE",
+    "material": "DIAMOND_PICKAXE",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_pickaxe.png"
+  },
+  {
+    "id": "PAPER",
+    "material": "PAPER",
+    "image": "https://minecraft-api.vercel.app/images/items/paper.png"
+  },
+  {
+    "id": "EMERALD",
+    "material": "EMERALD",
+    "image": "https://minecraft-api.vercel.app/images/items/emerald.png"
+  },
+  {
+    "id": "RED_SANDSTONE_STAIRS",
+    "material": "RED_SANDSTONE_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/red_sandstone_stairs.png"
+  },
+  {
+    "id": "APPLE",
+    "material": "APPLE",
+    "image": "https://minecraft-api.vercel.app/images/items/apple.png"
+  },
+  {
+    "id": "GLASS_BOTTLE",
+    "material": "GLASS_BOTTLE",
+    "image": "https://minecraft-api.vercel.app/images/items/glass_bottle.png"
+  },
+  {
+    "id": "DISPENSER",
+    "material": "DISPENSER",
+    "image": "https://minecraft-api.vercel.app/images/items/dispenser.png"
+  },
+  {
+    "id": "LAPIS_BLOCK",
+    "material": "LAPIS_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/lapis_block.png"
+  },
+  {
+    "id": "EMERALD_ORE",
+    "material": "EMERALD_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/emerald_ore.png"
+  },
+  {
+    "id": "BLAZE_ROD",
+    "material": "BLAZE_ROD",
+    "image": "https://minecraft-api.vercel.app/images/items/blaze_rod.png"
+  },
+  {
+    "id": "FLINT",
+    "material": "FLINT",
+    "image": "https://minecraft-api.vercel.app/images/items/flint.png"
+  },
+  {
+    "id": "DIAMOND_CHESTPLATE",
+    "material": "DIAMOND_CHESTPLATE",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_chestplate.png"
+  },
+  {
+    "id": "COOKED_BEEF",
+    "material": "COOKED_BEEF",
+    "image": "https://minecraft-api.vercel.app/images/items/cooked_beef.png"
+  },
+  {
+    "id": "JUNGLE_FENCE",
+    "material": "JUNGLE_FENCE",
+    "image": "https://minecraft-api.vercel.app/images/items/jungle_fence.png"
+  },
+  {
+    "id": "ICE",
+    "material": "ICE",
+    "image": "https://minecraft-api.vercel.app/images/items/ice.png"
+  },
+  {
+    "id": "IRON_ORE",
+    "material": "IRON_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_ore.png"
+  },
+  {
+    "id": "GOLDEN_CARROT",
+    "material": "GOLDEN_CARROT",
+    "image": "https://minecraft-api.vercel.app/images/items/golden_carrot.png"
+  },
+  {
+    "id": "ARROW",
+    "material": "ARROW",
+    "image": "https://minecraft-api.vercel.app/images/items/arrow.png"
+  },
+  {
+    "id": "SEA_LANTERN",
+    "material": "SEA_LANTERN",
+    "image": "https://minecraft-api.vercel.app/images/items/sea_lantern.png"
+  },
+  {
+    "id": "COAL",
+    "material": "COAL",
+    "image": "https://minecraft-api.vercel.app/images/items/coal.png"
+  },
+  {
+    "id": "LEATHER_BOOTS",
+    "material": "LEATHER_BOOTS",
+    "image": "https://minecraft-api.vercel.app/images/items/leather_boots.png"
+  },
+  {
+    "id": "BRICK",
+    "material": "BRICK",
+    "image": "https://minecraft-api.vercel.app/images/items/brick.png"
+  },
+  {
+    "id": "PRISMARINE",
+    "material": "PRISMARINE",
+    "image": "https://minecraft-api.vercel.app/images/items/prismarine.gif"
+  },
+  {
+    "id": "IRON_DOOR",
+    "material": "IRON_DOOR",
+    "image": "https://minecraft-api.vercel.app/images/items/iron_door.png"
+  },
+  {
+    "id": "DIAMOND_AXE",
+    "material": "DIAMOND_AXE",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_axe.png"
+  },
+  {
+    "id": "CLAY_BALL",
+    "material": "CLAY_BALL",
+    "image": "https://minecraft-api.vercel.app/images/items/clay_ball.png"
+  },
+  {
+    "id": "QUARTZ_BLOCK",
+    "material": "QUARTZ_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/quartz_block.png"
+  },
+  {
+    "id": "GHAST_TEAR",
+    "material": "GHAST_TEAR",
+    "image": "https://minecraft-api.vercel.app/images/items/ghast_tear.png"
+  },
+  {
+    "id": "DIAMOND_HOE",
+    "material": "DIAMOND_HOE",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_hoe.png"
+  },
+  {
+    "id": "MOSSY_COBBLESTONE",
+    "material": "MOSSY_COBBLESTONE",
+    "image": "https://minecraft-api.vercel.app/images/items/mossy_cobblestone.png"
+  },
+  {
+    "id": "BLAZE_POWDER",
+    "material": "BLAZE_POWDER",
+    "image": "https://minecraft-api.vercel.app/images/items/blaze_powder.png"
+  },
+  {
+    "id": "DARK_OAK_FENCE_GATE",
+    "material": "DARK_OAK_FENCE_GATE",
+    "image": "https://minecraft-api.vercel.app/images/items/dark_oak_fence_gate.png"
+  },
+  {
+    "id": "LEATHER_LEGGINGS",
+    "material": "LEATHER_LEGGINGS",
+    "image": "https://minecraft-api.vercel.app/images/items/leather_leggings.png"
+  },
+  {
+    "id": "MAGMA_CREAM",
+    "material": "MAGMA_CREAM",
+    "image": "https://minecraft-api.vercel.app/images/items/magma_cream.png"
+  },
+  {
+    "id": "DIAMOND_BLOCK",
+    "material": "DIAMOND_BLOCK",
+    "image": "https://minecraft-api.vercel.app/images/items/diamond_block.png"
+  },
+  {
+    "id": "BIRCH_FENCE_GATE",
+    "material": "BIRCH_FENCE_GATE",
+    "image": "https://minecraft-api.vercel.app/images/items/birch_fence_gate.png"
+  },
+  {
+    "id": "QUARTZ",
+    "material": "QUARTZ",
+    "image": "https://minecraft-api.vercel.app/images/items/quartz.png"
+  },
+  {
+    "id": "SOUL_SAND",
+    "material": "SOUL_SAND",
+    "image": "https://minecraft-api.vercel.app/images/items/soul_sand.png"
+  },
+  {
+    "id": "ARMOR_STAND",
+    "material": "ARMOR_STAND",
+    "image": "https://minecraft-api.vercel.app/images/items/armor_stand.png"
+  },
+  {
+    "id": "QUARTZ_STAIRS",
+    "material": "QUARTZ_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/quartz_stairs.png"
+  },
+  {
+    "id": "SANDSTONE",
+    "material": "SANDSTONE",
+    "image": "https://minecraft-api.vercel.app/images/items/sandstone.png"
+  },
+  {
+    "id": "ROTTEN_FLESH",
+    "material": "ROTTEN_FLESH",
+    "image": "https://minecraft-api.vercel.app/images/items/rotten_flesh.png"
+  },
+  {
+    "id": "SANDSTONE_STAIRS",
+    "material": "SANDSTONE_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/sandstone_stairs.png"
+  },
+  {
+    "id": "DARK_OAK_STAIRS",
+    "material": "DARK_OAK_STAIRS",
+    "image": "https://minecraft-api.vercel.app/images/items/dark_oak_stairs.png"
+  },
+  {
+    "id": "WOOD_AXE",
+    "material": "WOOD_AXE",
+    "image": "https://minecraft-api.vercel.app/images/items/wooden_axe.png"
+  },
+  {
+    "id": "POTION",
+    "material": "POTION",
+    "image": "https://minecraft-api.vercel.app/images/items/water_bottle.png"
+  },
+  {
+    "id": "DRAGON_EGG",
+    "material": "DRAGON_EGG",
+    "image": "https://minecraft-api.vercel.app/images/items/dragon_egg.png"
+  },
+  {
+    "id": "SADDLE",
+    "material": "SADDLE",
+    "image": "https://minecraft-api.vercel.app/images/items/saddle.png"
+  },
+  {
+    "id": "LEVER",
+    "material": "LEVER",
+    "image": "https://minecraft-api.vercel.app/images/items/lever.png"
+  },
+  {
+    "id": "DETECTOR_RAIL",
+    "material": "DETECTOR_RAIL",
+    "image": "https://minecraft-api.vercel.app/images/items/detector_rail.png"
+  },
+  {
+    "id": "MUTTON",
+    "material": "MUTTON",
+    "image": "https://minecraft-api.vercel.app/images/items/mutton.png"
+  },
+  {
+    "id": "FLINT_AND_STEEL",
+    "material": "FLINT_AND_STEEL",
+    "image": "https://minecraft-api.vercel.app/images/items/flint_and_steel.png"
+  },
+  {
+    "id": "ACACIA_FENCE_GATE",
+    "material": "ACACIA_FENCE_GATE",
+    "image": "https://minecraft-api.vercel.app/images/items/acacia_fence_gate.png"
+  },
+  {
+    "id": "LANTERN",
+    "material": "SKULL_ITEM",
+    "skin": {
+      "value": "ewogICJ0aW1lc3RhbXAiIDogMTY3OTE1MDYzMDgxOSwKICAicHJvZmlsZUlkIiA6ICI0MWNlOThmMDllMzU0NGVjYjE4ZTYwYThlODEyOGEyOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJNb25zdGVySGl0IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzE2ZTU2ODJiNGEwZTVhZjUyMzdmYjk5NjA5ODNjNjIzZWFiMDRlYzAxYjkwMTQ3YzRkZjRjOTBhN2JlNjY0ZDUiCiAgICB9CiAgfQp9",
+      "signature": "bQzztwCWrukmNuG/LcXQlTB3V5WC2nMWjXl5aYHul8wesGh0Agu49UpHFLqt5YzKMgHuxZMfctXemDUrHX/5yKcaJLJVMc8nG+Un0bBIXEvW19C1cqibEy5n8ZkVCno9XMFmn6lq9EU9DOKsLCeNVektuYDshdRuTh7TOl5WPkSy3V7mByc2Bs7BlFp8O6FHvXuyUq/hfDoe2jyGPlzOWETfj8XvgBTYHtGWDFVbMSSXpVUMpRhlFpI8YKDg0/lqht5cdb0SLFWBLklC0RG3R/USuownYfrv4LPAVfszkpxqCOjDuUstORQXp4Y2LeGEzjXnLS+tCz4oq9+fAVHUCu+9qJzEmFt6gK5nPOIsQrSvg0Fq2kqHwMaxgwNyu5v1vjm97XF2JHwH7rqjDh88AmBBGqigUyj2OLwZ3TQ1UGNNZUd4h8o5B/VBh7vxfwaV24UogyxfvxnwucUohRE8j5A9wcMCpFBOacQZGazP43C4iWZQI4UBVRghlAymX8ziW/x/azFkBHA4Bibj2wUbllPjmSLoVS8UvqsBvFqjRcNnPWu2tglj2yoZbgi/VXbIL26F4ZsxGPUWCSMNXvhFFCQb7x4nSPD8ZfXLUkbMvc/K+fKrVQfn55IQczXwo9mDPO3H9iAtXO6jbX0lHtihRrl5E261yRab2v/pMZAXikY="
+    },
+    "image": "https://minecraft-api.vercel.app/images/items/lantern.png"
+  },
+  {
+    "id": "CHARCOAL",
+    "material": "COAL",
+    "image": "https://minecraft-api.vercel.app/images/items/charcoal.png"
+  },
+  {
+    "id": "RED_MUSHROOM",
+    "material": "RED_MUSHROOM",
+    "image": "https://minecraft-api.vercel.app/images/items/red_mushroom.png"
+  },
+  {
+    "id": "TRIPWIRE_HOOK",
+    "material": "TRIPWIRE_HOOK",
+    "image": "https://minecraft-api.vercel.app/images/items/tripwire_hook.png"
+  },
+  {
+    "id": "GLOWSTONE_DUST",
+    "material": "GLOWSTONE_DUST",
+    "image": "https://minecraft-api.vercel.app/images/items/glowstone_dust.png"
+  },
+  {
+    "id": "REDSTONE_ORE",
+    "material": "REDSTONE_ORE",
+    "image": "https://minecraft-api.vercel.app/images/items/redstone_ore.png"
+  },
+  {
+    "id": "BEDROCK",
+    "material": "BEDROCK",
+    "image": "https://minecraft-api.vercel.app/images/items/bedrock.png"
+  }
+]
