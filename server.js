@@ -4,8 +4,9 @@ const path = require('path');
 const url = require('url');
 const mysql = require('mysql');
 const db = require ('./db.js');
+const crafting = require ('./crafting.js')
 
-const port = 49161;
+const port = 49166;
 const API_KEY = "LUKO E' UNA PUTTANA";
 
 const API_ADDRESSES = {
@@ -35,8 +36,7 @@ class Product{
     this.one_hour_instabuys = one_hour_instabuys;
     this.sell_price = sell_price;
     this.one_hour_instasells = one_hour_instasells;
-    let tax = Mayor?.mayor?.name != "Derpy" ? (buy_price * 0.01125) : (buy_price * 0.01125 * 4);
-    this.margin = (buy_price - sell_price) - tax ;
+    this.margin = (buy_price - sell_price) - tax * buy_price;
     if(one_hour_instabuys < one_hour_instasells)
       this.coins_per_hour = this.margin * one_hour_instabuys;
     else
@@ -51,12 +51,15 @@ var allBzProductData;//all bz data as product class objects
 var Mayor;//current mayor name as a string
 const updating = true;
 const fetchAllProducts = true;
-const populatedb = true;
+const populatedb = false;
 const callDelay = 3 * 1000;
 var readingBzData = false;//binary semaphore to avoid reading bz data while it is being written
 var cachedFlippingPage = null; // Cache for the homepage response
 var isWritingBazaarJSON = false
 const imageDir = path.join(__dirname, 'ASSETS', 'PRODUCTS');
+var {recipes} = require('./crafting.js');
+let bzDataReady = false;
+let tax;
 const availableImages = new Set(
   fs.readdirSync(imageDir)
     .filter(file => file.endsWith('.png'))
@@ -127,7 +130,7 @@ const server = http.createServer(async (req, res) => {
       break;
     }
     case pathname.startsWith('/crafting') && method === 'GET': {
-      const response = 'WIP CRAFTING'
+      const response = getAllCraftingItemDivs();
       res.setHeader('Content-Type', 'text/html');
       res.end(response);
       break;
@@ -153,7 +156,7 @@ const server = http.createServer(async (req, res) => {
     
 
     case pathname.startsWith('/search') && method === 'GET': {
-      if (!allBzProductData || !Array.isArray(allBzProductData) || allBzProductData.length === 0) {
+      if (!allBzProductData || Object.keys(allBzProductData).length === 0) {
         res.setHeader('Content-Type', 'text/html');
         res.end('<h1>Bazaar data is still loading. Please wait a bit before trying to search again.</h1>');
       } else {
@@ -165,7 +168,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     case pathname.startsWith('/update') && method === 'POST': {
-      if (!allBzProductData || !Array.isArray(allBzProductData) || allBzProductData.length === 0) {
+      if (!allBzProductData || Object.keys(allBzProductData).length === 0) {
         res.setHeader('Content-Type', 'text/html');
         res.end('<h1>Bazaar data is still loading. Please wait a bit before trying to search again.</h1>');
       } else {
@@ -323,6 +326,8 @@ function startPeriodicTasks() {
 async function getMayor() {
   Mayor = await fetchApi("MAYOR");
   console.log(`The current Mayor is ${Mayor.mayor.name}`)
+  tax = Mayor?.mayor?.name != "Derpy" ?  0.01125 : 0.01125 * 4;
+  console.log('Taxes are at:',tax)
 }
 function bzDataToProduct(product){
    if (product in bzData.products){
@@ -331,14 +336,17 @@ function bzDataToProduct(product){
    return null;
 }
 
-function allBzDataToProduct(){
-  readingBzData = true;
-  allBzProductData = [];
-  if(!bzData?.products || !bzData) return;
-  for(product in bzData.products){
-    allBzProductData.push(bzDataToProduct(product));
+function allBzDataToProduct() {
+  const newProductData = {};
+  for (const productId in bzData.products) {
+    const productObj = bzDataToProduct(productId);
+    if (productObj) {
+      newProductData[productId] = productObj;
+    }
   }
-  readingBzData = false;
+
+  allBzProductData = newProductData;
+  bzDataReady = true;
 }
 
 async function fetchBzData() {
@@ -422,9 +430,17 @@ async function populateBzDb(){
 }
 
 function writeallBzToDb(){
- for(let i = 0; i < allBzProductData.length; i++){
-    db.addHistoricData(allBzProductData[i].name,allBzProductData[i].sell_price,allBzProductData[i].buy_price,new Date().toISOString().slice(0, 19).replace('T', ' '),allBzProductData[i].one_hour_instasells,allBzProductData[i].one_hour_instabuys,new Date().toISOString().slice(11, 19));
-  }
+for (const product of Object.values(allBzProductData)) {
+  db.addHistoricData(
+    product.name,
+    product.sell_price,
+    product.buy_price,
+    new Date().toISOString().slice(0, 19).replace('T', ' '),
+    product.one_hour_instasells,
+    product.one_hour_instabuys,
+    new Date().toISOString().slice(11, 19)
+  );
+}
 }
 
 function returnProductHtml(product){//profit and margin are the same thing i'm just very very dumb
@@ -448,11 +464,11 @@ function returnProductHtml(product){//profit and margin are the same thing i'm j
     show_only_profit = "true"
     sortby= 'coinsPerHour'*/
 function bzSearch(queryParams){//TODO ADD MORE FILTERING AND SORTING OPTIONS
-  if (!allBzProductData || !Array.isArray(allBzProductData)) return [];
+  if (!allBzProductData) return [];
 
   // Convert queryParams to object if it's a string (for backward compatibility)
   let params = typeof queryParams === "string" ? { product: queryParams } : queryParams;
-  let filteredProducts = allBzProductData.filter(product => {
+  let filteredProducts = Object.values(allBzProductData).filter(product => {
     if (!product) return false;
     if(product.one_hour_instabuys < params.treshholdbuys) return false;
     if(product.one_hour_instasells < params.treshholdsells) return false;
@@ -514,7 +530,7 @@ function updateVisibleProducts(queryParams) {
   let currentProducts = [];
   if (queryParams && Array.isArray(queryParams.products)) {
     for (const id of queryParams.products) {
-      const product = allBzProductData.find(p => p && p.name === id);
+      const product = allBzProductData[id]
       if (product) currentProducts.push(product);
     }
   }
@@ -550,7 +566,7 @@ async function getProductDataPage(product_id) {
           buyPrices.push(row.buy);
           sellPrices.push(row.sell);
         });
-const product = allBzProductData.find(p => p && p.name === product_id);
+const product = allBzProductData[product_id];
 res += `
 <!DOCTYPE html>
 <html lang="en">
@@ -726,3 +742,74 @@ function formatDateTime(dateInput, timeStr) {
   return date.toISOString(); // ex: "2025-01-23T07:41:11.000Z"
 }
 
+//TODO FIX ITEMS WHO DON'T SELL ON THE BAZAAR AND FIX ITEMS WHO CRAFT INTO MORE THAN 1 PRODUCT
+
+ function getCraftingItemDiv(productID){
+  let product = allBzProductData[productID];
+  let div = `<div id="${product.name}" class="output" onclick="window.location.href='/product/${encodeURIComponent(product.name)}'">${ returnCraftingProductHtml(productID,product)}</div>`;
+  return div;
+}
+
+function getProductCraftingCost(recipe){
+  let totalCost = 0;
+  if (!recipe) return 0;
+  for (const ingredient in recipe) {
+    const quantity = recipe[ingredient];
+    const product = allBzProductData[ingredient];
+    if (product && !isNaN(product.buy_price)) {
+      totalCost += product.sell_price * quantity;
+    }
+  }
+  return totalCost;
+}
+
+function getCraftingProductVolume(recipe){
+  let minVolume = Infinity;
+  if (!recipe) return 0;
+  for (const ingredient in recipe) {
+    const quantity = recipe[ingredient];
+    const product = allBzProductData[ingredient];
+    if (product && !isNaN(product.one_hour_instasells)) {
+      const possible = product.one_hour_instasells / quantity;
+      console.log(`Ingredient: ${ingredient}, Quantity needed: ${quantity}, One-hour instasells: ${product.one_hour_instasells}, Possible crafts: ${possible}`);
+      if (possible < minVolume) minVolume = possible;
+    } else {
+      console.log(`Ingredient: ${ingredient} is missing or has invalid instasell data.`);
+      return 0;
+    }
+  }
+  return Math.floor(minVolume);
+}
+
+ function returnCraftingProductHtml(productID,product){
+      let recipe = crafting.getRecipeIngredients(productID);
+      let craftingCost = getProductCraftingCost(recipe);
+      let profit = product.buy_price - craftingCost;
+      let oneHourCrafts = getCraftingProductVolume(recipe);
+      oneHourCrafts = oneHourCrafts <= product.one_hour_instasells ? oneHourCrafts : product.one_hour_instabuys.toFixed(0);
+      console.log(oneHourCrafts)
+      // Apply tax the same way as in Product class: margin = (buy_price - craftingCost) - tax * buy_price
+      let margin = (product.buy_price - craftingCost) - (typeof tax === 'number' ? tax : 0) * product.buy_price;
+      let coinsPerHour = oneHourCrafts * margin;
+      html= `<img  loading="lazy" src="${product.img}" alt="img of ${product.name}">
+          <p class="productName">${product.name.toLowerCase().replace(/_/g, ' ').replace(/enchantment/gi, '')}</p>
+          <p>Buy Price: ${product.buy_price.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins<br>
+          One-Hour Instabuys: ${product.one_hour_instabuys.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}<br>
+          Crafting Cost: ${craftingCost.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}<br>
+          One-Hour Crafts: ${oneHourCrafts}<br>
+          Profit: ${profit.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins <br>
+          Coins per Hour: ${coinsPerHour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')} coins</p>
+          ` 
+      return html;
+}
+
+function getAllCraftingItemDivs() {
+  let html = "";
+  for (const productID in allBzProductData) {
+    const recipe = crafting.getRecipeIngredients(productID);
+    if (recipe && Object.keys(recipe).length > 0) {
+      html += getCraftingItemDiv(productID);
+    }
+  }
+  return html;
+}

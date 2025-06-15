@@ -14,18 +14,21 @@ async function loadAllItemRecipes(filepath) {
 (async () => {
     try {
         recipes = await loadAllItemRecipes(recipesPath);
-        console.log(await getRecipeIngredients('TARANTULA_SILK'))
     } catch (err) {
         console.error("Failed to load recipes:", err);
     }
 })();
 
-async function getRecipeIngredients(productId){
+function getRecipeIngredients(productId) {
+    if (!recipes[productId] || !recipes[productId].recipe) {
+        return null;
+    }
     const summary = {};
     let recipe = recipes[productId].recipe;
     for (const key in recipe) {
+        
         const value = recipe[key];
-        if (!value) continue;
+        if (!value || value == '' || key == 'count') continue;
 
         const [item, qtyStr] = value.split(':');
         const quantity = parseInt(qtyStr, 10);
@@ -39,3 +42,8 @@ async function getRecipeIngredients(productId){
 
     return summary;
 }
+module.exports = {
+    loadAllItemRecipes,
+    getRecipeIngredients,
+    recipes,
+};
