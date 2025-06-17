@@ -1,12 +1,14 @@
-const fs = require("fs");
+//importing config file
+const fs = require("fs");const { port, API_KEY, API_ADDRESSES, FILE_PATHS, updating, fetchAllProducts, populatedb, callDelay, imageDir, maxWorkers } = require("./config.js");
+
 const http = require("http");
 const path = require("path");
 const url = require("url");
-const mysql = require("mysql");
 const db = require("./db.js");
 const WorkerPool = require("./workerPool");
-const htmlWorkerPool = new WorkerPool(path.join(__dirname, "htmlWorker.js"), 4); // 4 workers, adjust as needed
+const htmlWorkerPool = new WorkerPool(path.join(__dirname, "htmlWorker.js"), maxWorkers);
 
+//class Product that represents a single item in the bazaar with computed values and some utilities like image paths and name
 class Product {
   constructor(
     name,
@@ -33,20 +35,28 @@ class Product {
     else this.coins_per_hour = this.margin * one_hour_instasells;
   }
 }
-var bzData; //all bz data as json
-var ahData; //all ah data as json
-var allBzProductData; //all bz data as product class objects
-var Mayor; //current mayor name as a string
 
-var readingBzData = false; //binary semaphore to avoid reading bz data while it is being written
-var cachedFlippingPage = null; // Cache for the homepage response
-var cachedCraftingPage = null; // Cache for the homepage response
-var isWritingBazaarJSON = false;
-const imageDir = path.join(__dirname, "ASSETS", "PRODUCTS");
-var { recipes } = require("./crafting.js");
-const { port, API_KEY, API_ADDRESSES, FILE_PATHS, updating, fetchAllProducts, populatedb, callDelay } = require("./config.js");
-let bzDataReady = false;
+//all bz data as json
+var bzData; 
+
+//all ah data as json
+var ahData; 
+
+//all bz data as product class objects
+var allBzProductData; 
+
+//current mayor name as a string
+var Mayor; 
+
+// Cache for the flipping response
+var cachedFlippingPage = null; 
+
+// Cache for the crafting response
+var cachedCraftingPage = null; 
+
+//tax on bazaar based on mayor as a float value
 let tax;
+
 const availableImages = new Set(
   fs
     .readdirSync(imageDir)
@@ -122,14 +132,13 @@ const server = http.createServer(async (req, res) => {
       break;
     }
     case pathname.startsWith("/flipping") && method === "GET": {
-      const response = cachedFlippingPage;
+      const response = cachedFlippingPage != null ? cachedFlippingPage : "<h1>the page is not ready try again in a second</h1>";
       res.setHeader("Content-Type", "text/html");
       res.end(response);
       break;
     }
     case pathname.startsWith("/crafting") && method === "GET": {
-      const response =
-        cachedCraftingPage != null ? getCraftingPage() : "wait a bit";
+      const response = cachedCraftingPage != null ? cachedCraftingPage : "<h1>the page is not ready try again in a second</h1>";
       res.setHeader("Content-Type", "text/html");
       res.end(response);
       break;
@@ -694,6 +703,7 @@ Plotly.newPlot('volumeChart', [traceBuyVol, traceSellVol], layoutVol, config);
 
   return res + chartScript;
 }
+
 function formatDateTime(dateInput, timeStr) {
   const date = new Date(dateInput);
 
@@ -706,19 +716,12 @@ function formatDateTime(dateInput, timeStr) {
     const [hours, minutes, seconds] = timeStr.split(":").map(Number);
     date.setHours(hours || 0, minutes || 0, seconds || 0, 0);
   } else {
-    // Fallback: set to midnight
     date.setHours(0, 0, 0, 0);
   }
 
   return date.toISOString(); // ex: "2025-01-23T07:41:11.000Z"
 }
 
-//TODO FIX ITEMS WHO DON'T SELL ON THE BAZAAR AND FIX ITEMS WHO CRAFT INTO MORE THAN 1 PRODUCT
-
-function getCraftingPage() {
-  return cachedCraftingPage;
-}
-
 module.exports = {
-  tax, // <-- add this getter
+  tax,//exporting tax for worker threads who need it
 };

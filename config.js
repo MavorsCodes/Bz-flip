@@ -34,6 +34,13 @@ const populatedb = false;
 //call delay for different periodic functions inside the server TODO divide this into different call times
 const callDelay = 3 * 1000;
 
+
+//image directory path
+const imageDir = path.join(__dirname, "ASSETS", "PRODUCTS");
+
+//maximum amount of wokers allowed in the workerPool
+const maxWorkers = 4;
+
 module.exports = {
     port,
     API_KEY,
@@ -43,4 +50,6 @@ module.exports = {
     fetchAllProducts,
     populatedb,
     callDelay,
+    imageDir,
+    maxWorkers
 };
