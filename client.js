@@ -1,40 +1,42 @@
-var instabuysRange = 0; 
+var instabuysRange = 0;
 var instasellsRange = 0;
 var maxbuyRange = 0;
 var mincoinsRange = 0;
 var show_only_profit = true;
-var sortby = 'coinsPerHour';
+var sortby = "coinsPerHour";
 var isAwaitingRefresh = false;
-let remainingHTML = ''; // <-- NEW: stores leftover HTML for scroll
+let remainingHTML = ""; // <-- NEW: stores leftover HTML for scroll
+var updateType;
 const ITEMS_PER_CHUNK = 24;
 
 const bindings = [
   { range: "instabuysRange", text: "instabuysText" },
   { range: "instasellsRange", text: "instasellsText" },
   { range: "maxbuyRange", text: "maxbuyText" },
-  { range: "mincoinsRange", text: "mincoinsText" }
+  { range: "mincoinsRange", text: "mincoinsText" },
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   allPageSetup();
   setupScrollListener(); // <-- NEW
 });
 
-function allPageSetup(){
+function allPageSetup() {
   startPeriodicUpdates(10 * 1000);
   setupUI();
 }
 
-function editOutputs(editedHtml){
-  document.getElementById('outputs').innerHTML = editedHtml;
+function editOutputs(editedHtml) {
+  document.getElementById("outputs").innerHTML = editedHtml;
 }
 
-document.getElementById('searchIcon').addEventListener('click', () => {
+document.getElementById("searchIcon").addEventListener("click", () => {
   isAwaitingRefresh = false;
+  updateType = '/search';
   updateSearchParams();
   const params = new URLSearchParams({
-    address: 'BAZAAR',
-    product: document.getElementById('search').value,
+    address: "BAZAAR",
+    product: document.getElementById("search").value,
     treshholdsells: instasellsRange,
     treshholdbuys: instabuysRange,
     min_coins_per_hour: mincoinsRange,
@@ -43,68 +45,79 @@ document.getElementById('searchIcon').addEventListener('click', () => {
     show_only_profit: show_only_profit,
     sortby: sortby,
   });
-  fetch(`/search?${params.toString()}`, { method: 'GET' })
-    .then(response => response.text())
-    .then(html => {
+  fetch(`/search?${params.toString()}`, { method: "GET" })
+    .then((response) => response.text())
+    .then((html) => {
       infinityScroll(html);
-
     })
-    .catch(error => console.error('Error:', error));
+    .catch((error) => console.error("Error:", error));
 });
 
 function getNavData(url) {
-  fetch(url, { method: 'GET' })
-    .then(response => response.text())
-    .then(html => {
-      if(!html.includes('div')) return;
+  updateType = url;
+  fetch(url, { method: "GET" })
+    .then((response) => response.text())
+    .then((html) => {
+      if (!html.includes("div")) editOutputs(html);
       infinityScroll(html);
       console.log(url + " HTML loaded successfully");
     })
-    .catch(error => console.error('Error:', error));
+    .catch((error) => console.error("Error:", error));
+  isAwaitingRefresh = false;
 }
 
-function infinityScroll(html){
-      remainingHTML = ''; // Reset scroll cache after search
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = html;
+function infinityScroll(html) {
+  remainingHTML = ""; // Reset scroll cache after search
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
 
-      const children = Array.from(tempDiv.children);
-      let totalHeight = 0;
-      let stackedDivs = 0;
-      const productAmountDiv = document.getElementById('productAmount');
-      productAmountDiv.innerHTML = children[0].nodeName == 'DIV' ? `Showing ${children.length} products` : 'Showing 0 products';
+  const children = Array.from(tempDiv.children);
+  let totalHeight = 0;
+  let stackedDivs = 0;
+  const productAmountDiv = document.getElementById("productAmount");
+  productAmountDiv.innerHTML =
+    children[0].nodeName == "DIV"
+      ? `Showing ${children.length} products`
+      : "Showing 0 products";
 
-      // Count how many divs fit in 1.5x viewport height
-      for (const child of children) {
-        document.body.appendChild(child); // temp add to measure
-        const height = child.getBoundingClientRect().height;
-        totalHeight += height;
-        if (totalHeight < window.innerHeight * 1.5) {
-          stackedDivs++;
-        } else {
-          child.remove();
-          break;
-        }
-        child.remove();
-      }
+  // Count how many divs fit in 1.5x viewport height
+  for (const child of children) {
+    document.body.appendChild(child); // temp add to measure
+    const height = child.getBoundingClientRect().height;
+    totalHeight += height;
+    if (totalHeight < window.innerHeight * 1.5) {
+      stackedDivs++;
+    } else {
+      child.remove();
+      break;
+    }
+    child.remove();
+  }
 
-      // Use 4x that amount for initial render
-      const initialCount = Math.min(children.length, stackedDivs * 4 || ITEMS_PER_CHUNK);
-      const visibleChildren = children.slice(0, initialCount).map(c => c.outerHTML);
-      remainingHTML = children.slice(initialCount).map(c => c.outerHTML).join('');
+  // Use 4x that amount for initial render
+  const initialCount = Math.min(
+    children.length,
+    stackedDivs * 4 || ITEMS_PER_CHUNK
+  );
+  const visibleChildren = children
+    .slice(0, initialCount)
+    .map((c) => c.outerHTML);
+  remainingHTML = children
+    .slice(initialCount)
+    .map((c) => c.outerHTML)
+    .join("");
 
-      editOutputs(visibleChildren.join(''));
+  editOutputs(visibleChildren.join(""));
 }
 
 function appendNextChunk() {
-  
   if (!remainingHTML) {
-    console.log(['bro reached the end'])
+    console.log(["bro reached the end"]);
     return;
   }
 
   // Use a temp container to extract elements
-  const tempDiv = document.createElement('div');
+  const tempDiv = document.createElement("div");
   tempDiv.innerHTML = remainingHTML;
   const children = Array.from(tempDiv.children);
 
@@ -112,25 +125,31 @@ function appendNextChunk() {
   const chunk = children.slice(0, ITEMS_PER_CHUNK);
 
   // Append them to the outputs container
-  document.getElementById('outputs').insertAdjacentHTML(
-    'beforeend',
-    chunk.map(child => child.outerHTML).join('')
-  );
+  document
+    .getElementById("outputs")
+    .insertAdjacentHTML(
+      "beforeend",
+      chunk.map((child) => child.outerHTML).join("")
+    );
 
   // Update remainingHTML
-  remainingHTML = children.slice(ITEMS_PER_CHUNK).map(child => child.outerHTML).join('');
+  remainingHTML = children
+    .slice(ITEMS_PER_CHUNK)
+    .map((child) => child.outerHTML)
+    .join("");
 }
 
 function setupScrollListener() {
-  window.addEventListener('scroll', () => {
-    const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+  window.addEventListener("scroll", () => {
+    const nearBottom =
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
     if (nearBottom && remainingHTML) {
       appendNextChunk();
     }
   });
 }
 
-function startPeriodicUpdates(delay){
+function startPeriodicUpdates(delay) {
   setInterval(async () => {
     try {
       updateVisibleProducts();
@@ -140,9 +159,9 @@ function startPeriodicUpdates(delay){
   }, delay);
 }
 
-function setupUI(){
-  const outputsDiv = document.getElementById('outputs');
-  
+function setupUI() {
+  const outputsDiv = document.getElementById("outputs");
+
   bindings.forEach(({ range, text }) => {
     const rangeEl = document.getElementById(range);
     const textEl = document.getElementById(text);
@@ -190,7 +209,7 @@ function updateSearchParams() {
   sortby = document.getElementById("sortby").value;
 }
 
-function clearProducts(){
+function clearProducts() {
   document.getElementById("outputs").replaceChildren();
 }
 
@@ -198,9 +217,9 @@ function updateVisibleProducts() {
   isAwaitingRefresh = true;
   const idsArray = getCurrentProducts();
   if (!idsArray.length) return;
-
+  if(updateType == "/search"){
   const params = {
-    address: 'BAZAAR',
+    address: "BAZAAR",
     products: idsArray,
     treshholdsells: instasellsRange,
     treshholdbuys: instabuysRange,
@@ -210,48 +229,52 @@ function updateVisibleProducts() {
     sortby: sortby,
   };
 
-  fetch('/update', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params)
+  fetch("/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
   })
-    .then(response => response.text())
-    .then(html => {
+    .then((response) => response.text())
+    .then((html) => {
       if (isAwaitingRefresh) {
         editOutputs(html);
         isAwaitingRefresh = false;
       }
     })
-    .catch(error => {
+    .catch((error) => {
       isAwaitingRefresh = false;
-      console.error('Error:', error);
+      console.error("Error:", error);
     });
+  }
+  else getNavData(updateType);
 }
 
-function getCurrentProducts(){
-  const outputsDiv = document.getElementById('outputs');
-  const children = Array.from(outputsDiv.children).filter(child => child.tagName === 'DIV');
-  return children.map(child => child.id).filter(Boolean);
+function getCurrentProducts() {
+  const outputsDiv = document.getElementById("outputs");
+  const children = Array.from(outputsDiv.children).filter(
+    (child) => child.tagName === "DIV"
+  );
+  return children.map((child) => child.id).filter(Boolean);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('search');
-  const searchIcon = document.getElementById('searchIcon');
-  searchInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("search");
+  const searchIcon = document.getElementById("searchIcon");
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
       e.preventDefault();
       searchIcon.click();
     }
   });
 
-  fetch('/mayorname')
-    .then(response => response.text())
-    .then(name => {
-      document.getElementById('mayorName').textContent = name;
-      document.getElementById('mayorImg').src = '/mayors/' + name + '.png';
+  fetch("/mayorname")
+    .then((response) => response.text())
+    .then((name) => {
+      document.getElementById("mayorName").textContent = name;
+      document.getElementById("mayorImg").src = "/mayors/" + name + ".png";
     })
-    .catch(error => {
-      console.error('Error fetching name:', error);
+    .catch((error) => {
+      console.error("Error fetching name:", error);
     });
 });
 
@@ -275,7 +298,7 @@ function parseNumber(formatted) {
 
 function validateTextInput(textEl, rangeEl) {
   const raw = textEl.textContent;
-  const cleaned = raw.replace(/[^\d.,kKmMbB\-+]/g, '').trim();
+  const cleaned = raw.replace(/[^\d.,kKmMbB\-+]/g, "").trim();
   const value = parseNumber(cleaned);
   const min = parseFloat(rangeEl.min || 0);
   const max = parseFloat(rangeEl.max || 100);
@@ -290,8 +313,8 @@ function validateTextInput(textEl, rangeEl) {
 }
 
 function toggleAdvancedSearch() {
-  const advancedSearch = document.getElementById('advancedSearch');
-  const button = document.getElementById('toggleButton');
-  advancedSearch.classList.toggle('collapsed');
-  button.classList.toggle('rotated');
+  const advancedSearch = document.getElementById("advancedSearch");
+  const button = document.getElementById("toggleButton");
+  advancedSearch.classList.toggle("collapsed");
+  button.classList.toggle("rotated");
 }
