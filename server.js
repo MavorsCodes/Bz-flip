@@ -7,21 +7,6 @@ const db = require("./db.js");
 const WorkerPool = require("./workerPool");
 const htmlWorkerPool = new WorkerPool(path.join(__dirname, "htmlWorker.js"), 4); // 4 workers, adjust as needed
 
-const port = 49166;
-const API_KEY = "LUKO E' UNA PUTTANA";
-
-const API_ADDRESSES = {
-  AUCTIONS: "https://api.hypixel.net/v2/skyblock/auctions",
-  BAZAAR: "https://api.hypixel.net/v2/skyblock/bazaar",
-  MAYOR: "https://api.hypixel.net/v2/resources/skyblock/election",
-};
-
-const FILE_PATHS = {
-  AUCTIONS: path.join(__dirname, "JSON", "auctions.json"),
-  BAZAAR: path.join(__dirname, "JSON", "bazaar.json"),
-  ALL_PRODUCTS: path.join(__dirname, "JSON", "allproducts.json"),
-};
-
 class Product {
   constructor(
     name,
@@ -48,21 +33,18 @@ class Product {
     else this.coins_per_hour = this.margin * one_hour_instasells;
   }
 }
-
 var bzData; //all bz data as json
 var ahData; //all ah data as json
 var allBzProductData; //all bz data as product class objects
 var Mayor; //current mayor name as a string
-const updating = true;
-const fetchAllProducts = true;
-const populatedb = false;
-const callDelay = 3 * 1000;
+
 var readingBzData = false; //binary semaphore to avoid reading bz data while it is being written
 var cachedFlippingPage = null; // Cache for the homepage response
 var cachedCraftingPage = null; // Cache for the homepage response
 var isWritingBazaarJSON = false;
 const imageDir = path.join(__dirname, "ASSETS", "PRODUCTS");
 var { recipes } = require("./crafting.js");
+const { port, API_KEY, API_ADDRESSES, FILE_PATHS, updating, fetchAllProducts, populatedb, callDelay } = require("./config.js");
 let bzDataReady = false;
 let tax;
 const availableImages = new Set(
