@@ -54,6 +54,9 @@ var cachedFlippingPage = null;
 // Cache for the crafting response
 var cachedCraftingPage = null; 
 
+// Cache for the forging response
+var cachedForgingPage = null;
+
 //tax on bazaar based on mayor as a float value
 let tax;
 
@@ -122,7 +125,7 @@ const server = http.createServer(async (req, res) => {
 
     case pathname === "/mayorname": {
       res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end(Mayor.mayor.name);
+      res.end(Mayor && Mayor.mayor && Mayor.mayor.name ? Mayor.mayor.name : "Unknown");
       break;
     }
     case pathname.startsWith("/homepage") && method === "GET": {
@@ -144,7 +147,7 @@ const server = http.createServer(async (req, res) => {
       break;
     }
     case pathname.startsWith("/forging") && method === "GET": {
-      const response = "WIP FORGING";
+      const response = cachedForgingPage != null ? cachedForgingPage : "<h1>the page is not ready try again in a second</h1>";
       res.setHeader("Content-Type", "text/html");
       res.end(response);
       break;
@@ -198,7 +201,9 @@ const server = http.createServer(async (req, res) => {
           let queryParams = {};
           try {
             queryParams = JSON.parse(body);
-          } catch (e) {}
+          } catch (e) {
+            console.error("Error parsing JSON body in /update:", e);
+          }
           const response = await htmlWorkerPool
             .runTask({
               allBzProductData,
@@ -355,6 +360,21 @@ function startPeriodicTasks() {
       });
   }, callDelay);
 
+    setInterval(async () => {
+    cachedForgingPage = await htmlWorkerPool
+      .runTask({
+        allBzProductData,
+        requestType: "forging",
+        queryParams: {
+          /* ... */
+        },
+        tax,
+      })
+      .catch((err) => {
+        console.error("Error in caching Forging Page:", err);
+      });
+    }, callDelay);
+
   setInterval(async () => {
     try {
       await getMayor();
@@ -387,7 +407,8 @@ function startPeriodicTasks() {
 async function getMayor() {
   Mayor = await fetchApi("MAYOR");
   console.log(`The current Mayor is ${Mayor.mayor.name}`);
-  tax = Mayor?.mayor?.name != "Derpy" ? 0.01125 : 0.01125 * 4;
+  // If the mayor is Derpy, tax is quadrupled; otherwise, use the normal tax rate
+  tax = Mayor?.mayor?.name === "Derpy" ? 0.01125 * 4 : 0.01125;
   console.log("Taxes are at:", tax);
 }
 function bzDataToProduct(product) {
@@ -411,7 +432,6 @@ function allBzDataToProduct() {
       newProductData[productId] = productObj;
     }
   }
-
   allBzProductData = newProductData;
   bzDataReady = true;
 }
@@ -481,14 +501,14 @@ async function fileToJson(filepath) {
 function writeAllProductsToJson() {
   let allProducts = [];
   if (!bzData?.products || !bzData) return;
-  for (product in bzData.products) {
+  for (const product in bzData.products) {
     allProducts.push(normalize(bzData.products[product].product_id));
   }
   jsonToFile(FILE_PATHS["ALL_PRODUCTS"], JSON.stringify(allProducts));
 }
 
 async function populateBzDb() {
-  for (product in allBzProductData) {
+  for (const product in allBzProductData) {
     if (!(await db.productExists(allBzProductData[product].name))) {
       db.addProduct(
         allBzProductData[product].name,

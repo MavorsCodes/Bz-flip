@@ -48,7 +48,7 @@ function getRecipeIngredients(productId) {
 }
 
 function getProductNpcPrice(productId) {
-  return recipes[productId]?.npc_buy?.cost[0].split(":")[1];
+  return recipes[productId]?.npc_buy?.cost[0].split(":")[1];//"oggetto:quantita" => [oggetto,quantita]
 }
 module.exports = {
   loadAllItemRecipes,

@@ -38,8 +38,8 @@ const callDelay = 3 * 1000;
 //image directory path
 const imageDir = path.join(__dirname, "ASSETS", "PRODUCTS");
 
-//maximum amount of wokers allowed in the workerPool
-const maxWorkers = 4;
+//maximum amount of workers allowed in the workerPool
+const maxWorkers = 2;
 
 module.exports = {
     port,

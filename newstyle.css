@@ -116,6 +116,7 @@ body {
 }
 #advancedSearch {
   width: 21.25vw;
+  border-radius: 1vw;
   background-color: #641b2e;
   margin: 0.7vh auto;
   overflow: hidden;

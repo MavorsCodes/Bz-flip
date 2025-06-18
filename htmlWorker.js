@@ -1,49 +1,62 @@
 const {parentPort} = require('worker_threads');
 const crafting = require('./crafting.js');
+const path = require('path');
+const fs = require('fs');
 
-parentPort.on('message', async ({ allBzProductData, requestType,queryParams,tax}) => {
-    await crafting.recipesReady;
-    if (requestType === 'crafting') {
-        const response = getAllCraftingItemDivs(allBzProductData,tax);
-        parentPort.postMessage(response);
-    }
-    if(requestType === 'flipping'){
-    let response;
-    try {
-      response = HTMLSearchedPage({
-        address: "BAZAAR",
-        product: "",
-        treshholdsells: 0,
-        treshholdbuys: 0,
-        min_coins_per_hour: 0,
-        maxbuyRange: Infinity,
-        show_only_profit: "true", //TODO WTF IS THIS OMG CHANGE THIS SO IT TAKES A BOOLEAN AND NOT A STRING
-        sortby: "coinsPerHour",
-      }, allBzProductData);
-    } catch (error) {
-      console.error("Error in caching Home Page", error);
-      response = "<h1>Error generating flipping page</h1>";
-    }
-    parentPort.postMessage(response);
-    }
-    if(requestType === 'searching'){
-      try {
-      response = HTMLSearchedPage(queryParams, allBzProductData);
-    } catch (error) {
-      console.error("Error in caching Home Page", error);
-      response = "<h1>Error generating flipping page</h1>";
-    }
+parentPort.on('message', async ({ allBzProductData, requestType, queryParams, tax }) => {
+  await crafting.recipesReady;
+  let response;
+  switch (requestType) {
+    case 'crafting':
+      response = getAllCraftingItemDivs(allBzProductData, tax);
       parentPort.postMessage(response);
-    }
-    if(requestType === 'updating'){
+      break;
+    case 'flipping':
       try {
-      response = updateVisibleProducts(queryParams, allBzProductData);
-    } catch (error) {
-      console.error("Error in caching Home Page", error);
-      response = "<h1>Error generating flipping page</h1>";
-    }
+        response = HTMLSearchedPage({
+          address: "BAZAAR",
+          product: "",
+          treshholdsells: 0,
+          treshholdbuys: 0,
+          min_coins_per_hour: 0,
+          maxbuyRange: Infinity,
+          show_only_profit: "true", //TODO WTF IS THIS OMG CHANGE THIS SO IT TAKES A BOOLEAN AND NOT A STRING
+          sortby: "coinsPerHour",
+        }, allBzProductData);
+      } catch (error) {
+        console.error("Error in caching Home Page", error);
+        response = "<h1>Error generating flipping page</h1>";
+      }
       parentPort.postMessage(response);
-    }
+      break;
+      
+      case 'forging':
+      response = getHtmlForgingPage(allBzProductData, tax);
+      parentPort.postMessage(response);
+      break;
+
+    case 'searching':
+      try {
+        response = HTMLSearchedPage(queryParams, allBzProductData);
+      } catch (error) {
+        console.error("Error in caching Home Page", error);
+        response = "<h1>Error generating flipping page</h1>";
+      }
+      parentPort.postMessage(response);
+      break;
+    case 'updating':
+      try {
+        response = updateVisibleProducts(queryParams, allBzProductData);
+      } catch (error) {
+        console.error("Error in caching Home Page", error);
+        response = "<h1>Error generating flipping page</h1>";
+      }
+      parentPort.postMessage(response);
+      break;
+    default:
+      parentPort.postMessage("<h1>Unknown request type</h1>");
+      break;
+  }
 });
 
 function getCraftingItemDiv(productID, product, computedStats) {
@@ -132,7 +145,7 @@ function getCraftingProductVolume(recipe,allBzProductData) {
 }
 
 function returnCraftingProductHtml(product, computedStats) {
-  const { craftingCost, profit, oneHourCrafts, margin, coinsPerHour } =
+  const { craftingCost, profit, oneHourCrafts, coinsPerHour } =
     computedStats;
 
   return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
@@ -177,15 +190,12 @@ function getAllCraftingItemDivs(allBzProductData,tax) {
       oneHourCrafts <= product.one_hour_instasells
         ? oneHourCrafts
         : parseInt(product.one_hour_instabuys.toFixed(0), 10);
-
-    const margin = product.buy_price - craftingCost;
-    const coinsPerHour = oneHourCrafts * margin;
+    const coinsPerHour = oneHourCrafts * profit;
 
     const computedStats = {
       craftingCost,
       profit,
       oneHourCrafts,
-      margin,
       coinsPerHour,
     };
 
@@ -357,4 +367,128 @@ function sortProducts(filteredProducts, sortby) {
     default:
       return filteredProducts;
   }
+}
+
+function getHtmlForgingPage(allBzProductData,tax){
+  const forgeItemsPath = path.join(__dirname, 'forgeItems.json');
+  let forgeItems = [];
+  try {
+    const data = fs.readFileSync(forgeItemsPath, 'utf8');
+    forgeItems = JSON.parse(data);
+  } catch (err) {
+    console.error('Failed to load forgeItems.json:', err);
+    return '<h1>Error loading forge items</h1>';
+  }
+  return getAllForgingDivs(forgeItems,allBzProductData,tax)
+}
+
+function getAllForgingDivs(forgeItems, allBzProductData, tax) {
+  let html = '';
+  let items = [];
+  for (const item in forgeItems) {
+    const product = allBzProductData[item];
+    if (!product) continue;
+    const recipe = getRecipeIngredients(forgeItems, item);
+    const craftingCost = getProductCraftingCost(recipe, allBzProductData, tax);
+    const profit = product.buy_price - craftingCost;
+    const forgingTime = (forgeItems[item].forge * 0.7) / 3600;
+    const craftsPerHour = 1 / forgingTime;
+    const coinsPerHour =
+      craftsPerHour > product.one_hour_instabuys ? profit * product.one_hour_instabuys : profit * craftsPerHour;
+    const computedStats = {
+      product,
+      craftingCost,
+      profit,
+      forgingTime,
+      coinsPerHour,
+    };
+    items.push(computedStats);
+  }
+  items.sort((a, b) => b.profit - a.profit);
+  for (const computedStats of items) {
+    html += getForgingDiv(computedStats.product, computedStats);
+  }
+  return html;
+}
+
+
+function getForgingHtml(product, computedStats) {
+  // Provide default values and safe formatting to avoid runtime errors
+  const {
+    craftingCost = 0,
+    profit = 0,
+    forgingTime = 0,
+    coinsPerHour = 0,
+  } = computedStats || {};
+
+  const safeBuyPrice = product.buy_price && !isNaN(product.buy_price) ? product.buy_price : 0;
+  const safeInstabuys = product.one_hour_instabuys && !isNaN(product.one_hour_instabuys) ? product.one_hour_instabuys : 0;
+  return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
+    <p class="productName">${product.name
+      .toLowerCase()
+      .replace(/_/g, " ")
+      .replace(/enchantment/gi, "")}</p>
+    <p>
+      Buy Price: ${safeBuyPrice
+        .toFixed(1)
+        .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
+      One-Hour Instabuys: ${safeInstabuys
+        .toFixed(1)
+        .replace(/\d(?=(\d{3})+\.)/g, "$&,")}<br>
+      Crafting Cost: ${!isNaN(craftingCost) ? craftingCost.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"}<br>
+      Forging Time: ${!isNaN(forgingTime) ? formatHours(forgingTime) : "N/A"}<br>
+      Profit: ${!isNaN(profit) ? profit.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"} coins<br>
+      Coins per Hour: ${!isNaN(coinsPerHour) ? coinsPerHour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"} coins
+    </p>`;
+}
+
+function getForgingDiv(product,computedStats){
+  return `<div id="${
+    product.name
+  }" class="output" onclick="window.location.href='/product/${encodeURIComponent(
+    product.name
+  )}'">
+    ${getForgingHtml( product, computedStats)}
+  </div>`;
+}
+
+function getRecipeIngredients(forgeItems,productId) {
+  if (!forgeItems[productId] || !forgeItems[productId].recipe) {
+    return null;
+  }
+  const summary = {};
+  let recipe = forgeItems[productId].recipe;
+  for (const key in recipe) {
+    const value = recipe[key];
+    if (!value || value === "") continue;
+
+    if (key === "count") {
+      summary.count = parseInt(value, 10);
+      continue;
+    }
+
+    const [item, qtyStr] = value.split(":");
+    const quantity = parseInt(qtyStr, 10);
+
+    if (!summary[item]) {
+      summary[item] = 0;
+    }
+
+    summary[item] += quantity;
+  }
+
+  return summary;
+}
+
+function formatHours(time) {
+  const totalSeconds = Math.round(time * 3600);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const h = hours > 0 ? `${hours}h` : '';
+  const m = minutes > 0 ? `${minutes}m` : '';
+  const s = seconds > 0 ? `${seconds}s` : '';
+
+  return [h, m, s].filter(Boolean).join(' ') || '0s';
 }

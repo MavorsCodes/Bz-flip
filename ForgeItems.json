@@ -1,0 +1,478 @@
+{
+  "AMBER_MATERIAL": {
+    "name": "Amber Material",
+    "recipe": {
+      "A1": "FINE_AMBER_GEM:12",
+      "A2": "GOLDEN_PLATE:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Amber_Material",
+    "forge": 25200,
+    "base_rarity": "EPIC"
+  },
+  "BEJEWELED_HANDLE": {
+    "name": "Bejeweled Handle",
+    "recipe": {
+      "A1": "GLACITE_JEWEL:3",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Bejeweled_Handle",
+    "forge": 30,
+    "base_rarity": "RARE"
+  },
+  "DIAMONITE": {
+    "name": "Diamonite",
+    "recipe": {
+      "A1": "REFINED_DIAMOND:3",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Diamonite",
+    "forge": 21600,
+    "base_rarity": "RARE"
+  },
+  "DIVAN_POWDER_COATING": {
+    "name": "Divan's Powder Coating",
+    "recipe": {
+      "A1": "GLOSSY_GEMSTONE:32",
+      "A2": "REFINED_MINERAL:32",
+      "A3": "DIVAN_FRAGMENT:5",
+      "B1": "ENCHANTED_GOLD_BLOCK:16",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Divan%27s_Powder_Coating",
+    "forge": 129600,
+    "base_rarity": "LEGENDARY"
+  },
+  "DRILL_ENGINE": {
+    "name": "Drill Engine",
+    "recipe": {
+      "A1": "TREASURITE:10",
+      "A2": "ENCHANTED_IRON_BLOCK:1",
+      "A3": "ENCHANTED_REDSTONE_BLOCK:3",
+      "B1": "GOLDEN_PLATE:1",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Drill_Engine",
+    "forge": 108000,
+    "base_rarity": "RARE"
+  },
+  "FRIGID_HUSK": {
+    "name": "Frigid Husk",
+    "recipe": {
+      "A1": "GLACITE_AMALGAMATION:4",
+      "A2": "FLAWLESS_ONYX_GEM:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Frigid_Husk",
+    "forge": 36000,
+    "base_rarity": "LEGENDARY"
+  },
+  "FUEL_TANK": {
+    "name": "Fuel Tank",
+    "recipe": {
+      "A1": "ENCHANTED_COAL_BLOCK:2",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Fuel_Tank",
+    "forge": 36000,
+    "base_rarity": "RARE"
+  },
+  "GEMSTONE_MIXTURE": {
+    "name": "Gemstone Mixture",
+    "recipe": {
+      "A1": "FINE_JADE_GEM:4",
+      "A2": "FINE_AMBER_GEM:4",
+      "A3": "FINE_AMETHYST_GEM:4",
+      "B1": "FINE_SAPPHIRE_GEM:4",
+      "B2": "SLUDGE_JUICE:320",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Gemstone_Mixture",
+    "forge": 14400,
+    "base_rarity": "RARE"
+  },
+  "GLACITE_AMALGAMATION": {
+    "name": "Glacite Amalgamation",
+    "recipe": {
+      "A1": "FINE_ONYX_GEM:4",
+      "A2": "FINE_CITRINE_GEM:4",
+      "A3": "FINE_AQUAMARINE_GEM:4",
+      "B1": "FINE_PERIDOT_GEM:4",
+      "B2": "ENCHANTED_GLACITE:256",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Glacite_Amalgamation",
+    "forge": 14400,
+    "base_rarity": "EPIC"
+  },
+  "GLEAMING_CRYSTAL": {
+    "name": "Gleaming Crystal",
+    "recipe": {
+      "A1": "GLOSSY_GEMSTONE:32",
+      "A2": "REFINED_MITHRIL:32",
+      "A3": "REFINED_DIAMOND:2",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Gleaming_Crystal",
+    "forge": 32400,
+    "base_rarity": "EPIC"
+  },
+  "GOLDEN_PLATE": {
+    "name": "Golden Plate",
+    "recipe": {
+      "A1": "GLACITE_JEWEL:5",
+      "A2": "ENCHANTED_GOLD_BLOCK:2",
+      "A3": "REFINED_DIAMOND:1",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Golden_Plate",
+    "forge": 21600,
+    "base_rarity": "RARE"
+  },
+  "HOT_STUFF": {
+    "name": "Hot Stuff",
+    "recipe": {
+      "A1": "ENCHANTED_HARD_STONE:12",
+      "A2": "ENCHANTED_HARD_STONE:12",
+      "A3": "ENCHANTED_HARD_STONE:12",
+      "B1": "ENCHANTED_HARD_STONE:12",
+      "B2": "LAVA_BUCKET:1",
+      "B3": "ENCHANTED_HARD_STONE:12",
+      "C1": "ENCHANTED_HARD_STONE:12",
+      "C2": "ENCHANTED_HARD_STONE:12",
+      "C3": "ENCHANTED_HARD_STONE:12"
+    },
+    "wiki": "https://wiki.hypixel.net/Hot_Stuff",
+    "forge": 86400,
+    "base_rarity": "LEGENDARY"
+  },
+  "MITHRIL_PLATE": {
+    "name": "Mithril Plate",
+    "recipe": {
+      "A1": "GOLDEN_PLATE:1",
+      "A2": "REFINED_TITANIUM:1",
+      "A3": "REFINED_MITHRIL:5",
+      "B1": "ENCHANTED_IRON_BLOCK:1",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Mithril_Plate",
+    "forge": 64800,
+    "base_rarity": "RARE"
+  },
+  "PERFECT_PLATE": {
+    "name": "Perfect Plate",
+    "recipe": {
+      "A1": "UMBER_PLATE:1",
+      "A2": "TUNGSTEN_PLATE:1",
+      "A3": "MITHRIL_PLATE:1",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Perfect_Plate",
+    "forge": 21600,
+    "base_rarity": "LEGENDARY"
+  },
+  "PETRIFIED_STARFALL": {
+    "name": "Petrified Starfall",
+    "recipe": {
+      "A1": "STARFALL:512",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Petrified_Starfall",
+    "forge": 50400,
+    "base_rarity": "EPIC"
+  },
+  "POWER_CRYSTAL": {
+    "name": "Power Crystal",
+    "recipe": {
+      "A1": "STARFALL:256",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Power_Crystal",
+    "forge": 7200,
+    "base_rarity": "EPIC"
+  },
+  "PURE_MITHRIL": {
+    "name": "Pure Mithril",
+    "recipe": {
+      "A1": "REFINED_MITHRIL:2",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Pure_Mithril",
+    "forge": 43200,
+    "base_rarity": "RARE"
+  },
+  "REFINED_DIAMOND": {
+    "name": "Refined Diamond",
+    "recipe": {
+      "A1": "ENCHANTED_DIAMOND_BLOCK:2",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Refined_Diamond",
+    "forge": 28800,
+    "base_rarity": "EPIC"
+  },
+  "REFINED_MITHRIL": {
+    "name": "Refined Mithril",
+    "recipe": {
+      "A1": "ENCHANTED_MITHRIL:160",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Refined_Mithril",
+    "forge": 21600,
+    "base_rarity": "EPIC"
+  },
+  "REFINED_TITANIUM": {
+    "name": "Refined Titanium",
+    "recipe": {
+      "A1": "ENCHANTED_TITANIUM:16",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Refined_Titanium",
+    "forge": 43200,
+    "base_rarity": "LEGENDARY"
+  },
+  "REFINED_TUNGSTEN": {
+    "name": "Refined Tungsten",
+    "recipe": {
+      "A1": "ENCHANTED_TUNGSTEN:160",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Refined_Tungsten",
+    "forge": 3600,
+    "base_rarity": "EPIC"
+  },
+  "REFINED_UMBER": {
+    "name": "Refined Umber",
+    "recipe": {
+      "A1": "ENCHANTED_UMBER:160",
+      "A2": "",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Refined_Umber",
+    "forge": 3600,
+    "base_rarity": "EPIC"
+  },
+  "ROCK_GEMSTONE": {
+    "name": "Rock Gemstone",
+    "recipe": {
+      "A1": "ENCHANTED_COBBLESTONE:128",
+      "A2": "TREASURITE:64",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Rock_Gemstone",
+    "forge": 79200,
+    "base_rarity": "RARE"
+  },
+  "SKELETON_KEY": {
+    "name": "Skeleton Key",
+    "recipe": {
+      "A1": "PERFECT_PLATE:1",
+      "A2": "BEJEWELED_HANDLE:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Skeleton_Key",
+    "forge": 1800,
+    "base_rarity": "LEGENDARY"
+  },
+  "TUNGSTEN_KEY": {
+    "name": "Tungsten Key",
+    "recipe": {
+      "A1": "ENCHANTED_TUNGSTEN:192",
+      "A2": "BEJEWELED_HANDLE:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Tungsten_Key",
+    "forge": 30,
+    "base_rarity": "EPIC"
+  },
+  "TUNGSTEN_PLATE": {
+    "name": "Tungsten Plate",
+    "recipe": {
+      "A1": "REFINED_TUNGSTEN:4",
+      "A2": "GLACITE_AMALGAMATION:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Tungsten_Plate",
+    "forge": 10800,
+    "base_rarity": "RARE"
+  },
+  "UMBER_KEY": {
+    "name": "Umber Key",
+    "recipe": {
+      "A1": "ENCHANTED_UMBER:160",
+      "A2": "BEJEWELED_HANDLE:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Umber_Key",
+    "forge": 30,
+    "base_rarity": "EPIC"
+  },
+  "UMBER_PLATE": {
+    "name": "Umber Plate",
+    "recipe": {
+      "A1": "REFINED_UMBER:4",
+      "A2": "GLACITE_AMALGAMATION:1",
+      "A3": "",
+      "B1": "",
+      "B2": "",
+      "B3": "",
+      "C1": "",
+      "C2": "",
+      "C3": ""
+    },
+    "wiki": "https://wiki.hypixel.net/Umber_Plate",
+    "forge": 10800,
+    "base_rarity": "RARE"
+  }
+}

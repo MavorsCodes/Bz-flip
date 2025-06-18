@@ -27342,7 +27342,12 @@
   },
   "LAVA_BUCKET": {
     "name": "Lava Bucket",
-    "base_rarity": "COMMON"
+    "base_rarity": "COMMON",
+    "npc_buy": {
+      "cost": [
+        "SKYBLOCK_COIN:0"
+      ]
+    }
   },
   "LAVA_HORSE_BRONZE": {
     "name": "Lavahorse BRONZE",
