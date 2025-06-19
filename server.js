@@ -49,6 +49,9 @@ var allBzProductData;
 var Mayor; 
 
 // Cache for the flipping response
+var cachedHomePage = null;
+
+// Cache for the flipping response
 var cachedFlippingPage = null; 
 
 // Cache for the crafting response
@@ -129,7 +132,7 @@ const server = http.createServer(async (req, res) => {
       break;
     }
     case pathname.startsWith("/homepage") && method === "GET": {
-      const response = "WIP HOMEPAGE";
+      const response = cachedHomePage != null ? cachedHomePage : "<h1>the page is not ready try again in a second</h1>";
       res.setHeader("Content-Type", "text/html");
       res.end(response);
       break;
@@ -152,19 +155,6 @@ const server = http.createServer(async (req, res) => {
       res.end(response);
       break;
     }
-    case pathname.startsWith("/npc") && method === "GET": {
-      const response = "WIP NPC";
-      res.setHeader("Content-Type", "text/html");
-      res.end(response);
-      break;
-    }
-    case pathname.startsWith("/reversenpc") && method === "GET": {
-      const response = "WIP REVERSE NPC";
-      res.setHeader("Content-Type", "text/html");
-      res.end(response);
-      break;
-    }
-
     case pathname.startsWith("/search") && method === "GET": {
       if (!allBzProductData || Object.keys(allBzProductData).length === 0) {
         res.setHeader("Content-Type", "text/html");
@@ -372,6 +362,21 @@ function startPeriodicTasks() {
       })
       .catch((err) => {
         console.error("Error in caching Forging Page:", err);
+      });
+    }, callDelay);
+
+    setInterval(async () => {
+    cachedHomePage = await htmlWorkerPool
+      .runTask({
+        allBzProductData,
+        requestType: "home",
+        queryParams: {
+          /* ... */
+        },
+        tax,
+      })
+      .catch((err) => {
+        console.error("Error in caching Home Page:", err);
       });
     }, callDelay);
 

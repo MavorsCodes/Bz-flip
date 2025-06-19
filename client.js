@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function allPageSetup() {
   startPeriodicUpdates(10 * 1000);
   setupUI();
+  getNavData('/homepage')
 }
 
 function editOutputs(editedHtml) {
@@ -41,7 +42,6 @@ document.getElementById("searchIcon").addEventListener("click", () => {
     treshholdbuys: instabuysRange,
     min_coins_per_hour: mincoinsRange,
     maxbuyRange: maxbuyRange,
-    min_coins_per_hour: mincoinsRange,
     show_only_profit: show_only_profit,
     sortby: sortby,
   });
@@ -55,11 +55,29 @@ document.getElementById("searchIcon").addEventListener("click", () => {
 
 function getNavData(url) {
   updateType = url;
+  remainingHTML = '';
   fetch(url, { method: "GET" })
     .then((response) => response.text())
     .then((html) => {
-      if (!html.includes("div")) editOutputs(html);
-      infinityScroll(html);
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+      if(url == '/homepage'){
+        buildHomePage(html);
+        return;
+      }
+      // Remove 'homeoutputs' class from outputs
+      const outputsDiv = document.getElementById("outputs");
+      if (outputsDiv) outputsDiv.classList.remove("homeoutputs");
+
+      // Remove all other elements with 'homeoutputs' or 'bestheader' class
+      document.querySelectorAll(".homeoutputs, .bestheader").forEach(el => {
+        if (el !== outputsDiv) el.remove();
+      });
+      if (tempDiv.children.length === 0) {
+        editOutputs(html);
+      } else {
+        infinityScroll(html);
+      }
       console.log(url + " HTML loaded successfully");
     })
     .catch((error) => console.error("Error:", error));
@@ -218,33 +236,31 @@ function updateVisibleProducts() {
   const idsArray = getCurrentProducts();
   if (!idsArray.length) return;
   if(updateType == "/search"){
-  const params = {
-    address: "BAZAAR",
-    products: idsArray,
-    treshholdsells: instasellsRange,
-    treshholdbuys: instabuysRange,
-    min_coins_per_hour: mincoinsRange,
-    maxbuyRange: maxbuyRange,
-    min_coins_per_hour: mincoinsRange,
-    sortby: sortby,
-  };
-
-  fetch("/update", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(params),
-  })
-    .then((response) => response.text())
-    .then((html) => {
-      if (isAwaitingRefresh) {
-        editOutputs(html);
-        isAwaitingRefresh = false;
-      }
+    const params = {
+      address: "BAZAAR",
+      products: idsArray,
+      treshholdsells: instasellsRange,
+      treshholdbuys: instabuysRange,
+      min_coins_per_hour: mincoinsRange,
+      maxbuyRange: maxbuyRange,
+      sortby: sortby,
+    };
+    fetch("/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
     })
-    .catch((error) => {
-      isAwaitingRefresh = false;
-      console.error("Error:", error);
-    });
+      .then((response) => response.text())
+      .then((html) => {
+        if (isAwaitingRefresh) {
+          editOutputs(html);
+          isAwaitingRefresh = false;
+        }
+      })
+      .catch((error) => {
+        isAwaitingRefresh = false;
+        console.error("Error:", error);
+      });
   }
   else getNavData(updateType);
 }
@@ -301,7 +317,7 @@ function validateTextInput(textEl, rangeEl) {
   const cleaned = raw.replace(/[^\d.,kKmMbB\-+]/g, "").trim();
   const value = parseNumber(cleaned);
   const min = parseFloat(rangeEl.min || 0);
-  const max = parseFloat(rangeEl.max || 100);
+  const max = parseFloat(rangeEl.max || 1000000000);
   if (isNaN(value)) {
     textEl.textContent = "Invalid";
     return null;
@@ -317,4 +333,73 @@ function toggleAdvancedSearch() {
   const button = document.getElementById("toggleButton");
   advancedSearch.classList.toggle("collapsed");
   button.classList.toggle("rotated");
+}
+
+function buildHomePage(html) {
+  // Create two new divs inside main content
+  const mainContent = document.getElementById("mainContent");
+  if (!mainContent) return;
+
+  // Remove existing outputs1/outputs2 if present
+  ["outputs1", "outputs2"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+
+  // Remove existing headers if present
+  ["bestFlipsHeader", "bestCraftingHeader", "bestForgingHeader"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+
+  // Create headers with bestheader class
+  const bestFlipsHeader = document.createElement("h2");
+  bestFlipsHeader.id = "bestFlipsHeader";
+  bestFlipsHeader.className = "bestheader";
+  bestFlipsHeader.textContent = "TOP FLIPS";
+
+  const bestCraftingHeader = document.createElement("h2");
+  bestCraftingHeader.id = "bestCraftingHeader";
+  bestCraftingHeader.className = "bestheader";
+  bestCraftingHeader.textContent = "TOP CRAFTING FLIPS";
+
+  const bestForgingHeader = document.createElement("h2");
+  bestForgingHeader.id = "bestForgingHeader";
+  bestForgingHeader.className = "bestheader";
+  bestForgingHeader.textContent = "TOP FORGING FLIPS";
+
+  // Create outputs1 and outputs2
+  const outputs1 = document.createElement("div");
+  outputs1.id = "outputs1";
+  outputs1.className = "outputs";
+  const outputs2 = document.createElement("div");
+  outputs2.id = "outputs2";
+  outputs2.className = "outputs";
+
+  // Parse html into divs
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  const divs = Array.from(tempDiv.children).filter(el => el.tagName === "DIV");
+
+  // First 3 divs to editOutputs (outputs)
+  editOutputs(divs.slice(0, 3).map(d => d.outerHTML).join(""));
+
+  // Next 3 to outputs1
+  outputs1.innerHTML = divs.slice(3, 6).map(d => d.outerHTML).join("");
+
+  // Next 3 to outputs2
+  outputs2.innerHTML = divs.slice(6, 9).map(d => d.outerHTML).join("");
+  // Add class to the outputs containers, not their children
+  [outputs1, outputs2, document.getElementById("outputs")].forEach(container => {
+    if (container) {
+      container.classList.add("homeoutputs");
+    }
+  });
+  // Insert headers and outputs in order
+  mainContent.appendChild(bestFlipsHeader);
+  mainContent.appendChild(document.getElementById("outputs")); // outputs already exists
+  mainContent.appendChild(bestCraftingHeader);
+  mainContent.appendChild(outputs1);
+  mainContent.appendChild(bestForgingHeader);
+  mainContent.appendChild(outputs2);
 }

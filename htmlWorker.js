@@ -11,6 +11,12 @@ parentPort.on('message', async ({ allBzProductData, requestType, queryParams, ta
       response = getAllCraftingItemDivs(allBzProductData, tax);
       parentPort.postMessage(response);
       break;
+
+      case 'home':
+      response = await getHomepage(allBzProductData, tax);
+      parentPort.postMessage(response);
+      break;
+
     case 'flipping':
       try {
         response = HTMLSearchedPage({
@@ -147,12 +153,20 @@ function getCraftingProductVolume(recipe,allBzProductData) {
 function returnCraftingProductHtml(product, computedStats) {
   const { craftingCost, profit, oneHourCrafts, coinsPerHour } =
     computedStats;
-
-  return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
-    <p class="productName">${product.name
+  let displayName;
+  const recipeKey = product.name.replace(/enchantment/gi, "");
+  if (crafting.recipes && crafting.recipes[recipeKey] && crafting.recipes[recipeKey].name) {
+    displayName = crafting.recipes[recipeKey].name;
+  } else {
+    displayName = product.name
       .toLowerCase()
       .replace(/_/g, " ")
-      .replace(/enchantment/gi, "")}</p>
+      .replace(/enchantment/gi, "")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .trim();
+  }
+  return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
+    <p class="productName">${displayName}</p>
     <p>
       Buy Price: ${product.buy_price
         .toFixed(1)
@@ -266,13 +280,30 @@ function returnProductHtml(product) {
     treshholdsells ='0'
     show_only_profit = "true"
     sortby= 'coinsPerHour'*/
-function bzSearch(queryParams,allBzProductData) {
-  //TODO ADD MORE FILTERING AND SORTING OPTIONS
-  if (!allBzProductData) return [];
-
+function bzSearch(queryParams, allBzProductData) {
   // Convert queryParams to object if it's a string (for backward compatibility)
   let params =
     typeof queryParams === "string" ? { product: queryParams } : queryParams;
+
+  // Helper to check if product name or recipe name matches search
+  function matchesSearch(product) {
+    const search = normalize(params.product);
+    if (!search) return true;
+    // Check product name
+    if (normalize(product.name).includes(search)) return true;
+    // Check recipe name if available
+    const recipeKey = product.name.replace(/enchantment/gi, "");
+    if (
+      crafting.recipes &&
+      crafting.recipes[recipeKey] &&
+      crafting.recipes[recipeKey].name &&
+      normalize(crafting.recipes[recipeKey].name).includes(search)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   let filteredProducts = Object.values(allBzProductData).filter((product) => {
     if (!product) return false;
     if (product.one_hour_instabuys < params.treshholdbuys) return false;
@@ -281,9 +312,7 @@ function bzSearch(queryParams,allBzProductData) {
     if (product.buy_price > params.maxbuyRange) return false;
     if (product.coins_per_hour <= 1 && params.show_only_profit == "true")
       return false;
-
-    if (!normalize(product.name).includes(normalize(params.product)))
-      return false;
+    if (!matchesSearch(product)) return false;
     return true;
   });
 
@@ -350,24 +379,6 @@ function updateVisibleProducts(queryParams,allBzProductData) {
     .join("");
   return productDivs;
 }
-function sortProducts(filteredProducts, sortby) {
-  switch (sortby) {
-    case "coinsPerHour":
-      return filteredProducts.sort(
-        (a, b) => b.coins_per_hour - a.coins_per_hour
-      );
-    case "profit":
-      return filteredProducts.sort((a, b) => b.margin - a.margin);
-    case "profit%":
-      return filteredProducts.sort((a, b) => {
-        const aPct = a.buy_price ? a.margin / a.buy_price : -Infinity;
-        const bPct = b.buy_price ? b.margin / b.buy_price : -Infinity;
-        return bPct - aPct;
-      });
-    default:
-      return filteredProducts;
-  }
-}
 
 function getHtmlForgingPage(allBzProductData,tax){
   const forgeItemsPath = path.join(__dirname, 'forgeItems.json');
@@ -423,11 +434,20 @@ function getForgingHtml(product, computedStats) {
 
   const safeBuyPrice = product.buy_price && !isNaN(product.buy_price) ? product.buy_price : 0;
   const safeInstabuys = product.one_hour_instabuys && !isNaN(product.one_hour_instabuys) ? product.one_hour_instabuys : 0;
-  return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
-    <p class="productName">${product.name
+  let displayName;
+  const recipeKey = product.name.replace(/enchantment/gi, "");
+  if (crafting.recipes && crafting.recipes[recipeKey] && crafting.recipes[recipeKey].name) {
+    displayName = crafting.recipes[recipeKey].name;
+  } else {
+    displayName = product.name
       .toLowerCase()
       .replace(/_/g, " ")
-      .replace(/enchantment/gi, "")}</p>
+      .replace(/enchantment/gi, "")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .trim();
+  }
+  return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
+    <p class="productName">${displayName}</p>
     <p>
       Buy Price: ${safeBuyPrice
         .toFixed(1)
@@ -491,4 +511,90 @@ function formatHours(time) {
   const s = seconds > 0 ? `${seconds}s` : '';
 
   return [h, m, s].filter(Boolean).join(' ') || '0s';
+}
+
+async function getHomepage(allBzProductData, tax) {
+  await crafting.recipesReady;
+
+  // Get top 3 Crafting
+  const craftingItems = [];
+  for (const productID in allBzProductData) {
+    const recipe = crafting.getRecipeIngredients(productID);
+    if (!recipe || Object.keys(recipe).length === 0) continue;
+
+    const product = allBzProductData[productID];
+    const craftingCount = recipe.count || 1;
+    const rawCraftingCost = getProductCraftingCost(recipe, allBzProductData, tax);
+    if (rawCraftingCost === null) continue;
+    const craftingCost = rawCraftingCost / craftingCount;
+    const profit = product.buy_price - craftingCost;
+    let oneHourCrafts = getCraftingProductVolume(recipe, allBzProductData);
+    oneHourCrafts =
+      oneHourCrafts <= product.one_hour_instasells
+        ? oneHourCrafts
+        : parseInt(product.one_hour_instabuys.toFixed(0), 10);
+    const coinsPerHour = oneHourCrafts * profit;
+
+    craftingItems.push({
+      html: getCraftingItemDiv(productID, product, {
+        craftingCost,
+        profit,
+        oneHourCrafts,
+        coinsPerHour,
+      }),
+      coinsPerHour,
+    });
+  }
+  craftingItems.sort((a, b) => b.coinsPerHour - a.coinsPerHour);
+  const topCrafting = craftingItems.slice(0, 3).map(item => item.html).join("");
+  // Get top 3 Flipping
+  const flippingParams = {
+    address: "BAZAAR",
+    product: "",
+    treshholdsells: 0,
+    treshholdbuys: 0,
+    min_coins_per_hour: 0,
+    maxbuyRange: Infinity,
+    show_only_profit: true,
+    sortby: "coinsPerHour",
+  };
+  const flipProducts = bzSearch(flippingParams, allBzProductData).slice(0, 3);
+  const topFlipping = flipProducts.map(product => createProductDiv(product)).join("");
+  // Get top 3 Forging
+  const forgeItemsPath = path.join(__dirname, 'forgeItems.json');
+  let forgeItems = [];
+  try {
+    forgeItems = JSON.parse(fs.readFileSync(forgeItemsPath, 'utf8'));
+  } catch (err) {
+    console.error('Error loading forge items:', err);
+  }
+  const forgingStats = [];
+  for (const item in forgeItems) {
+    const product = allBzProductData[item];
+    if (!product) continue;
+    const recipe = getRecipeIngredients(forgeItems, item);
+    const craftingCost = getProductCraftingCost(recipe, allBzProductData, tax);
+    const profit = product.buy_price - craftingCost;
+    const forgingTime = (forgeItems[item].forge * 0.7) / 3600;
+    const craftsPerHour = 1 / forgingTime;
+    const coinsPerHour = Math.min(craftsPerHour, product.one_hour_instabuys) * profit;
+
+    forgingStats.push({
+      html: getForgingDiv(product, {
+        craftingCost,
+        profit,
+        forgingTime,
+        coinsPerHour,
+      }),
+      profit,
+    });
+  }
+  forgingStats.sort((a, b) => b.profit - a.profit);
+  const topForging = forgingStats.slice(0, 3).map(item => item.html).join("");
+
+  return `
+    ${topFlipping}
+    ${topCrafting}
+    ${topForging}
+  `;
 }

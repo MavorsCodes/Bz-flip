@@ -1,7 +1,7 @@
 const path = require("path");
 
 //port the server listens to
-const port = 49166;
+const port = 49116;
 
 
 //api key, doesn't need one in current state. bazaar API calls don't need keys
