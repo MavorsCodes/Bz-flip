@@ -401,7 +401,7 @@ function startPeriodicTasks() {
           (d.getMinutes() + 15) % 60,
           "minutes"
         );
-        writeallBzToDb();
+        await writeallBzToDb();
       } catch (error) {
         console.error("Error in writing bz data to db", error);
       }
@@ -421,9 +421,9 @@ function bzDataToProduct(product) {
     return new Product(
       bzData.products[product].product_id,
       bzData.products[product].buy_summary[0]?.pricePerUnit || 0,
-      bzData.products[product].quick_status.buyMovingWeek / 7 / 24,
+      (bzData.products[product].quick_status?.buyMovingWeek|| 0) / 7 / 24,
       bzData.products[product].sell_summary[0]?.pricePerUnit || 0,
-      bzData.products[product].quick_status.sellMovingWeek / 7 / 24
+      (bzData.products[product].quick_status?.sellMovingWeek || 0) / 7 / 24
     );
   }
   return null;
@@ -523,7 +523,8 @@ async function populateBzDb() {
   }
 }
 
-function writeallBzToDb() {
+async function writeallBzToDb() {
+  await populateBzDb();
   for (const product of Object.values(allBzProductData)) {
     db.addHistoricData(
       product.name,

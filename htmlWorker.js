@@ -168,19 +168,15 @@ function returnCraftingProductHtml(product, computedStats) {
   return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
     <p class="productName">${displayName}</p>
     <p>
-      Buy Price: ${product.buy_price
-        .toFixed(1)
-        .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
-      One-Hour Instabuys: ${product.one_hour_instabuys
-        .toFixed(1)
+      Buy Price: ${safeFixed(product.buy_price)
+      .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
+      One-Hour Instabuys: ${safeFixed(product.one_hour_instabuys)
         .replace(/\d(?=(\d{3})+\.)/g, "$&,")}<br>
-      Crafting Cost: ${craftingCost
-        .toFixed(1)
+      Crafting Cost: ${safeFixed(craftingCost)
         .replace(/\d(?=(\d{3})+\.)/g, "$&,")}<br>
       One-Hour Crafts: ${oneHourCrafts}<br>
-      Profit: ${profit.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
-      Coins per Hour: ${coinsPerHour
-        .toFixed(1)
+      Profit: ${safeFixed(profit).replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
+      Coins per Hour: ${safeFixed(coinsPerHour)
         .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins
     </p>`;
 }
@@ -203,7 +199,7 @@ function getAllCraftingItemDivs(allBzProductData,tax) {
     oneHourCrafts =
       oneHourCrafts <= product.one_hour_instasells
         ? oneHourCrafts
-        : parseInt(product.one_hour_instabuys.toFixed(0), 10);
+        : parseInt(safeFixed(product.one_hour_instabuys,0), 10);
     const coinsPerHour = oneHourCrafts * profit;
 
     const computedStats = {
@@ -251,23 +247,17 @@ function returnProductHtml(product) {
 
   return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
           <p class="productName">${displayName}</p>
-          <p>Buy Price: ${product.buy_price
-            .toFixed(1)
+          <p>Buy Price: ${safeFixed(product.buy_price)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins <br>
-          One-Hour Instabuys: ${product.one_hour_instabuys
-            .toFixed(1)
+          One-Hour Instabuys: ${safeFixed(product.one_hour_instabuys)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}<br>
-          Sell Price: ${product.sell_price
-            .toFixed(1)
+          Sell Price: ${safeFixed(product.sell_price)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
-          One-Hour Instasells: ${product.one_hour_instasells
-            .toFixed(1)
+          One-Hour Instasells: ${safeFixed(product.one_hour_instasells)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}<br>
-          Profit: ${product.margin
-            .toFixed(1)
+          Profit: ${safeFixed(product.margin)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins <br>
-          Coins per Hour: ${product.coins_per_hour
-            .toFixed(1)
+          Coins per Hour: ${safeFixed(product.coins_per_hour)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins</p>
           `;
 }
@@ -449,16 +439,14 @@ function getForgingHtml(product, computedStats) {
   return `<img loading="lazy" src="${product.img}" alt="img of ${product.name}">
     <p class="productName">${displayName}</p>
     <p>
-      Buy Price: ${safeBuyPrice
-        .toFixed(1)
+      Buy Price: ${safeFixed(safeBuyPrice)
         .replace(/\d(?=(\d{3})+\.)/g, "$&,")} coins<br>
-      One-Hour Instabuys: ${safeInstabuys
-        .toFixed(1)
+      One-Hour Instabuys: ${safeFixed(safeInstabuys)
         .replace(/\d(?=(\d{3})+\.)/g, "$&,")}<br>
-      Crafting Cost: ${!isNaN(craftingCost) ? craftingCost.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"}<br>
+      Crafting Cost: ${!isNaN(craftingCost) ? safeFixed(craftingCost).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"}<br>
       Forging Time: ${!isNaN(forgingTime) ? formatHours(forgingTime) : "N/A"}<br>
-      Profit: ${!isNaN(profit) ? profit.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"} coins<br>
-      Coins per Hour: ${!isNaN(coinsPerHour) ? coinsPerHour.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"} coins
+      Profit: ${!isNaN(profit) ? safeFixed(profit).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"} coins<br>
+      Coins per Hour: ${!isNaN(coinsPerHour) ? safeFixed(coinsPerHour).replace(/\d(?=(\d{3})+\.)/g, "$&,") : "N/A"} coins
     </p>`;
 }
 
@@ -532,7 +520,7 @@ async function getHomepage(allBzProductData, tax) {
     oneHourCrafts =
       oneHourCrafts <= product.one_hour_instasells
         ? oneHourCrafts
-        : parseInt(product.one_hour_instabuys.toFixed(0), 10);
+        : parseInt(safeFixed(product.one_hour_instabuys,0), 10);
     const coinsPerHour = oneHourCrafts * profit;
 
     craftingItems.push({
@@ -598,3 +586,9 @@ async function getHomepage(allBzProductData, tax) {
     ${topForging}
   `;
 }
+
+function safeFixed(val, digits = 1) {
+  const num = Number(val);
+  return (!isNaN(num) && num !== null && num !== undefined) ? num.toFixed(digits) : (0).toFixed(digits);
+}
+

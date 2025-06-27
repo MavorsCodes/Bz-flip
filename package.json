@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "genImgs": "node ./IMGTOOLS/getAllUpdatedImgs.js"
+    "genImgs": "node ./HelperTools/IMGTOOLS/getAllUpdatedImgs.js"
   },
   "author": "mavors",
   "license": "MIT",

@@ -48,7 +48,12 @@ document.getElementById("searchIcon").addEventListener("click", () => {
   fetch(`/search?${params.toString()}`, { method: "GET" })
     .then((response) => response.text())
     .then((html) => {
-      infinityScroll(html);
+      const outputsDiv = document.getElementById("outputs");
+      if (outputsDiv) outputsDiv.classList.remove("homeoutputs");
+      document.querySelectorAll(".homeoutputs, .bestheader").forEach(el => {
+        if (el !== outputsDiv) el.remove();
+      });
+        infinityScroll(html);
     })
     .catch((error) => console.error("Error:", error));
 });
@@ -63,6 +68,8 @@ function getNavData(url) {
       tempDiv.innerHTML = html;
       if(url == '/homepage'){
         buildHomePage(html);
+        const productAmountDiv = document.getElementById("productAmount");
+        productAmountDiv.innerHTML = "Showing 9 products"
         return;
       }
       // Remove 'homeoutputs' class from outputs
