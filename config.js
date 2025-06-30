@@ -1,7 +1,7 @@
 const path = require("path");
 
 //port the server listens to
-const port = 49998;
+const port = 49999;
 
 
 //api key, doesn't need one in current state. bazaar API calls don't need keys
@@ -29,7 +29,7 @@ const updating = true;
 const fetchAllProducts = true;
 
 //do send data to the DB when updating it
-const populatedb = false;
+const populatedb = true;
 
 //call delay for different periodic functions inside the server TODO divide this into different call times
 const callDelay = 3 * 1000;

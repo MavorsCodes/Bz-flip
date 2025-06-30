@@ -208,7 +208,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   overflow: hidden;
   cursor: pointer;
 }
@@ -426,4 +425,20 @@ a.homeButton:hover {
   width: 5vw;
   image-rendering: crisp-edges;
   margin-bottom: 1vw;
+}
+
+.star {
+  position: absolute;
+    margin:  0 0 0 17vw;
+    visibility:hidden;
+    font-size:2.1vw;
+    color:var(--color-bg-main);
+    cursor:pointer;
+}
+.star:before {
+   content: "\2606";
+   visibility:visible;
+}
+.star:checked:before {
+   content: "\2605";
 }

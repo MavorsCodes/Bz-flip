@@ -8,6 +8,7 @@ var isAwaitingRefresh = false;
 let remainingHTML = ""; // <-- NEW: stores leftover HTML for scroll
 var updateType;
 const ITEMS_PER_CHUNK = 24;
+let favorites = [];
 
 const bindings = [
   { range: "instabuysRange", text: "instabuysText" },
@@ -19,6 +20,7 @@ const bindings = [
 document.addEventListener("DOMContentLoaded", () => {
   allPageSetup();
   setupScrollListener(); // <-- NEW
+  loadFavorites();
 });
 
 function allPageSetup() {
@@ -29,6 +31,7 @@ function allPageSetup() {
 
 function editOutputs(editedHtml) {
   document.getElementById("outputs").innerHTML = editedHtml;
+  setAllFavorites();
 }
 
 document.getElementById("searchIcon").addEventListener("click", () => {
@@ -61,6 +64,27 @@ document.getElementById("searchIcon").addEventListener("click", () => {
 function getNavData(url) {
   updateType = url;
   remainingHTML = '';
+  if(url == '/favorites'){
+    fetch('/favorites', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ favorites }),
+    })
+    .then(response => response.text())
+    .then(html => {
+            const outputsDiv = document.getElementById("outputs");
+      if (outputsDiv) outputsDiv.classList.remove("homeoutputs");
+
+      // Remove all other elements with 'homeoutputs' or 'bestheader' class
+      document.querySelectorAll(".homeoutputs, .bestheader").forEach(el => {
+        if (el !== outputsDiv) el.remove();
+      });
+      infinityScroll(html);
+      setAllFavorites();
+    })
+    .catch(error => console.error("Error:", error));
+    return;
+  }
   fetch(url, { method: "GET" })
     .then((response) => response.text())
     .then((html) => {
@@ -133,6 +157,7 @@ function infinityScroll(html) {
     .join("");
 
   editOutputs(visibleChildren.join(""));
+  setAllFavorites();
 }
 
 function appendNextChunk() {
@@ -410,3 +435,72 @@ function buildHomePage(html) {
   mainContent.appendChild(bestForgingHeader);
   mainContent.appendChild(outputs2);
 }
+
+function addFavorite(product,type){
+  let favorite = {"name":product, 'type':type}
+  console.log('adding',favorite)
+  favorites.push(favorite);
+}
+
+function removeFavorite(product,type){
+  let favorite = {"name":product, 'type':type}
+  console.log('removing',favorite)
+  favorites = favorites.filter(fav => !(fav.name === product && fav.type === type));
+}
+
+function loadFavorites() {
+  const match = document.cookie.match(/(?:^|;\s*)favorites=([^;]*)/);
+  if (!match) return;
+  try {
+    favorites = JSON.parse(decodeURIComponent(match[1]));
+  } catch (e) {
+    console.log("no favorites yet")
+    favorites = [];
+  }
+}
+
+function saveFavorites(){
+  let cookieExists = document.cookie.split(';').some((item) => item.trim().startsWith('favorites='));
+  document.cookie = `favorites=${encodeURIComponent(JSON.stringify(favorites))}; path=/; max-age=31536000`;
+}
+
+function handleFavoriteClick(product,type,event){
+  event.stopPropagation(); 
+  toggleFavoriteStar(product, type)
+  saveFavorites();
+}
+
+function toggleFavoriteStar(product, type) {
+  let starId = product + "Favorite" + type;
+  const starEl = document.getElementById(starId);
+  if (!starEl) return;
+  if (starEl.checked) {
+    addFavorite(product, type);
+  } else {
+    removeFavorite(product, type);
+  }
+}
+
+function starToTrue(product, type){
+  let starId = product + "Favorite" + type;
+  const starEl = document.getElementById(starId);
+  if (!starEl) return;
+  starEl.checked = true;
+}
+
+function setAllFavorites() {
+  favorites.forEach(fav => {
+    starToTrue(fav.name, fav.type);
+  });
+}
+
+const observer = new MutationObserver(() => {
+  setAllFavorites();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const outputsDiv = document.getElementById("outputs");
+  if (outputsDiv) {
+    observer.observe(outputsDiv, { childList: true, subtree: true });
+  }
+});

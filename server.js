@@ -178,38 +178,71 @@ const server = http.createServer(async (req, res) => {
       break;
     }
 
-    case pathname.startsWith("/update") && method === "POST": {
-      if (!allBzProductData || Object.keys(allBzProductData).length === 0) {
+      case pathname.startsWith("/favorites") && method === "POST": {
+        if (!allBzProductData || Object.keys(allBzProductData).length === 0) {
         res.setHeader("Content-Type", "text/html");
         res.end(
           "<h1>Bazaar data is still loading. Please wait a bit before trying to search again.</h1>"
         );
-      } else {
+        } else {
         let body = "";
         req.on("data", (chunk) => (body += chunk));
         req.on("end", async () => {
           let queryParams = {};
           try {
-            queryParams = JSON.parse(body);
+          queryParams = JSON.parse(body);
           } catch (e) {
-            console.error("Error parsing JSON body in /update:", e);
+          console.error("Error parsing JSON body in /favorites:", e);
           }
           const response = await htmlWorkerPool
-            .runTask({
-              allBzProductData,
-              requestType: "updating",
-              queryParams: queryParams,
-              tax,
-            })
-            .catch((err) => {
-              console.error("Error in caching Updating Page:", err);
-            });
+          .runTask({
+            allBzProductData,
+            requestType: "favorites",
+            queryParams: queryParams,
+            tax,
+          })
+          .catch((err) => {
+            console.error("Error in caching Favorites Page:", err);
+          });
           res.setHeader("Content-Type", "text/html");
           res.end(response);
         });
+        }
+        break;
       }
-      break;
-    }
+
+      case pathname.startsWith("/update") && method === "POST": {
+        if (!allBzProductData || Object.keys(allBzProductData).length === 0) {
+        res.setHeader("Content-Type", "text/html");
+        res.end(
+          "<h1>Bazaar data is still loading. Please wait a bit before trying to search again.</h1>"
+        );
+        } else {
+        let body = "";
+        req.on("data", (chunk) => (body += chunk));
+        req.on("end", async () => {
+          let queryParams = {};
+          try {
+          queryParams = JSON.parse(body);
+          } catch (e) {
+          console.error("Error parsing JSON body in /update:", e);
+          }
+          const response = await htmlWorkerPool
+          .runTask({
+            allBzProductData,
+            requestType: "updating",
+            queryParams: queryParams,
+            tax,
+          })
+          .catch((err) => {
+            console.error("Error in caching Updating Page:", err);
+          });
+          res.setHeader("Content-Type", "text/html");
+          res.end(response);
+        });
+        }
+        break;
+      }
 
     case pathname.startsWith("/product") && method === "GET": {
       const product = pathname.replace("/product/", "");
