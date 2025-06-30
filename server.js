@@ -546,7 +546,6 @@ function normalize(str) {
     .trim()
     .toString();
 }
-
 async function getProductDataPage(product_id) {
   let res = "";
   let chartScript = "";
@@ -567,7 +566,9 @@ async function getProductDataPage(product_id) {
           buyPrices.push(row.buy);
           sellPrices.push(row.sell);
         });
+
         const product = allBzProductData[product_id];
+
         res += `
 <!DOCTYPE html>
 <html lang="en">
@@ -587,100 +588,160 @@ async function getProductDataPage(product_id) {
   }
   <div id="chart" style="width:100%;max-width:800px;height:400px;"></div>
 `;
+
         chartScript = `
-      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-      <script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+const datetimes = ${JSON.stringify(datetimes)};
+const buyPrices = ${JSON.stringify(buyPrices)};
+const sellPrices = ${JSON.stringify(sellPrices)};
+const basePrice = Math.min(...buyPrices, ...sellPrices);
+
+// Buy price area
+const traceBuyBase = {
+  x: datetimes,
+  y: Array(datetimes.length).fill(basePrice),
+  type: 'scatter',
+  mode: 'lines',
+  line: { color: 'rgba(0,0,0,0)', width: 0.5 },
+  showlegend: false,
+  hoverinfo: 'skip'
+};
+
 const traceBuy = {
-  x: ${JSON.stringify(datetimes)},
-  y: ${JSON.stringify(buyPrices)},
+  x: datetimes,
+  y: buyPrices,
   type: 'scatter',
   mode: 'lines',
   name: 'Buy Price',
   line: { color: '#1f77b4', width: 2 },
+  fill: 'tonexty',
+  fillcolor: 'rgba(31, 119, 180, 0.2)',
   marker: { size: 6 }
 };
 
+// Sell price area
+const traceSellBase = {
+  x: datetimes,
+  y: Array(datetimes.length).fill(basePrice),
+  type: 'scatter',
+  mode: 'lines',
+  line: { color: 'rgba(0,0,0,0)', width: 0.5 },
+  showlegend: false,
+  hoverinfo: 'skip'
+};
+
 const traceSell = {
-  x: ${JSON.stringify(datetimes)},
-  y: ${JSON.stringify(sellPrices)},
+  x: datetimes,
+  y: sellPrices,
   type: 'scatter',
   mode: 'lines',
   name: 'Sell Price',
   line: { color: '#ff7f0e', width: 2 },
+  fill: 'tonexty',
+  fillcolor: 'rgba(255, 127, 14, 0.2)',
   marker: { size: 6 }
 };
 
-      const layout = {
-title: 'Buy/Sell Price History',
-xaxis: {
-  title: 'Date & Time',
-  type: 'date',
-  showgrid: true,
-  tickangle: -45,
-  tickformat: "%b %d<br>%H:%M",
-  tickfont: { size: 12 }
-},
-yaxis: {
-  title: 'Price',
-  showgrid: true,
-  zeroline: false,
-  tickfont: { size: 12 }
-},
-legend: {
-  x: 0,
-  y: 1.15,
-  orientation: 'h',
-  font: { size: 14 }
-},
-margin: { t: 80, l: 50, r: 30, b: 80 },
-plot_bgcolor: "#fafafa",
-paper_bgcolor: "#ffffff",
-hovermode: 'x unified',
-dragmode: false // <--- disables drag zoom & pan
-      };
+const layout = {
+  title: 'Buy/Sell Price History',
+  xaxis: {
+    title: 'Date & Time',
+    type: 'date',
+    showgrid: true,
+    tickangle: -45,
+    tickformat: "%b %d<br>%H:%M",
+    tickfont: { size: 12 }
+  },
+  yaxis: {
+    title: 'Price',
+    showgrid: true,
+    zeroline: false,
+    tickfont: { size: 12 }
+  },
+  legend: {
+    x: 0,
+    y: 1.15,
+    orientation: 'h',
+    font: { size: 14 }
+  },
+  margin: { t: 80, l: 50, r: 30, b: 80 },
+  plot_bgcolor: "#fafafa",
+  paper_bgcolor: "#ffffff",
+  hovermode: 'x unified',
+  dragmode: false
+};
 
-      const config = {
-responsive: true,
-displayModeBar: true,
-displaylogo: false,
-modeBarButtonsToRemove: [
-  'zoom2d',
-  'pan2d',
-  'select2d',
-  'lasso2d',
-  'zoomIn2d',
-  'zoomOut2d',
-  'autoScale2d',
-  'resetScale2d'
-],
-scrollZoom: false
-      };
+const config = {
+  responsive: true,
+  displayModeBar: true,
+  displaylogo: false,
+  modeBarButtonsToRemove: [
+    'zoom2d',
+    'pan2d',
+    'select2d',
+    'lasso2d',
+    'zoomIn2d',
+    'zoomOut2d',
+    'autoScale2d',
+    'resetScale2d'
+  ],
+  scrollZoom: false
+};
 
-      Plotly.newPlot('chart', [traceBuy, traceSell], layout, config);
-      </script>
-      <div id="volumeChart" style="width:100%;max-width:800px;height:400px;margin-top:40px;"></div>
-      <script>
+Plotly.newPlot('chart', [traceBuyBase, traceBuy, traceSellBase, traceSell], layout, config);
+</script>
+
+<div id="volumeChart" style="width:100%;max-width:800px;height:400px;margin-top:40px;"></div>
+<script>
 // Volume chart
 const buyVolumes = ${JSON.stringify(data.map((row) => row.buy_volume || 0))};
 const sellVolumes = ${JSON.stringify(data.map((row) => row.sell_volume || 0))};
+const baseVolume = Math.min(...buyVolumes, ...sellVolumes);
+
+// Base for buy volume
+const traceBuyVolBase = {
+  x: datetimes,
+  y: Array(datetimes.length).fill(baseVolume),
+  type: 'scatter',
+  mode: 'lines',
+  line: { width: 0.5, color: 'rgba(0,0,0,0)' },
+  hoverinfo: 'skip',
+  showlegend: false
+};
 
 const traceBuyVol = {
-  x: ${JSON.stringify(datetimes)},
+  x: datetimes,
   y: buyVolumes,
   type: 'scatter',
   mode: 'lines',
   name: 'Buy Volume',
   line: { color: '#2ca02c', width: 2 },
+  fill: 'tonexty',
+  fillcolor: 'rgba(44, 160, 44, 0.3)',
   marker: { size: 6 }
 };
 
+// Base for sell volume
+const traceSellVolBase = {
+  x: datetimes,
+  y: Array(datetimes.length).fill(baseVolume),
+  type: 'scatter',
+  mode: 'lines',
+  line: { width: 0.5, color: 'rgba(0,0,0,0)' },
+  hoverinfo: 'skip',
+  showlegend: false
+};
+
 const traceSellVol = {
-  x: ${JSON.stringify(datetimes)},
+  x: datetimes,
   y: sellVolumes,
   type: 'scatter',
   mode: 'lines',
   name: 'Sell Volume',
   line: { color: '#d62728', width: 2 },
+  fill: 'tonexty',
+  fillcolor: 'rgba(214, 39, 40, 0.2)',
   marker: { size: 6 }
 };
 
@@ -713,17 +774,17 @@ const layoutVol = {
   dragmode: false
 };
 
-Plotly.newPlot('volumeChart', [traceBuyVol, traceSellVol], layoutVol, config);
-      </script>
-      <a class="homeButton" href="/">🏠</a>
-      </body>
-      </html>
+Plotly.newPlot('volumeChart', [traceBuyVolBase, traceBuyVol, traceSellVolBase, traceSellVol], layoutVol, config);
+</script>
+
+<a class="homeButton" href="/">🏠</a>
+</body>
+</html>
 `;
       }
     })
     .catch((err) => {
       console.error("Error fetching data:", err);
-      ``;
       res = `<p>Error loading product data.</p>`;
     });
 
